@@ -1,0 +1,421 @@
+--Fixed auto slapple toggle it’s now properly working
+
+--// SERVICES
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+--// PLAYER
+local player = Players.LocalPlayer
+
+--// CLEAN RE-EXECUTE
+if getgenv().KillstreakUnload then
+    pcall(getgenv().KillstreakUnload)
+end
+
+--// REMOTES
+local AddClick = ReplicatedStorage:WaitForChild("AddClick")
+local GiveKill = ReplicatedStorage:WaitForChild("AdminEvents"):WaitForChild("GiveKill")
+local GiveKill2 = ReplicatedStorage:WaitForChild("AdminEvents"):WaitForChild("GiveKill2")
+local GiveKill3 = ReplicatedStorage:WaitForChild("AdminEvents"):WaitForChild("GiveKill3")
+
+--// BUTTONS
+local ReaperButton, StarfallButton, TimestreakButton, KillstreakButton, DarknessButton
+task.spawn(function()
+    pcall(function()
+        local gui = player:WaitForChild("PlayerGui")
+        ReaperButton = gui:WaitForChild("ReaperButton",5):WaitForChild("TextButton",5)
+        StarfallButton = gui:WaitForChild("StarfallButton",5):WaitForChild("TextButton",5)
+        TimestreakButton = gui:WaitForChild("TimestreakButton",5):WaitForChild("TextButton",5)
+        KillstreakButton = gui:WaitForChild("KillstreakButton",5):WaitForChild("TextButton",5)
+        DarknessButton = gui:WaitForChild("DarknessButton",5):WaitForChild("TextButton",5)
+    end)
+end)
+
+--// LOAD UI
+local Rayfield
+repeat
+    local s,r = pcall(function()
+        return loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+    end)
+    if s and r then Rayfield = r else task.wait(2) end
+until Rayfield
+
+--// FILTER NOTIFICATIONS
+local oldNotify = Rayfield.Notify
+Rayfield.Notify = function(self, data)
+    if data and data.Title then
+        local t = tostring(data.Title)
+        if t:find("Rayfield") or t:find("Interface") then return end
+    end
+    return oldNotify(self, data)
+end
+
+--// NOTIFY
+local function Notify(t,c)
+    Rayfield:Notify({
+        Title=t,
+        Content=c,
+        Duration=3,
+        Image=4483362458
+    })
+end
+
+--// WINDOW
+local Window = Rayfield:CreateWindow({
+    Name="Killstreak button test remastered",
+    LoadingTitle="Killstreak",
+    LoadingSubtitle="Follow me on TikTok Mr_3242",
+    ConfigurationSaving={Enabled=false},
+    KeySystem=false
+})
+
+--// TABS
+local CheatsTab = Window:CreateTab("Cheats",4483362458)
+local CreditsTab = Window:CreateTab("Credits",4483362458)
+local UnloadTab = Window:CreateTab("Unload",4483362458)
+
+--// VARS
+local running=true
+local delay=0.1
+
+--// AUTO CLICK
+local autoClick=false
+local clickConnection
+local lastClick=0
+
+local function FireClicks()
+    if not running then return end
+    pcall(function()
+        if ReaperButton then ReaperButton:Activate() end
+        if StarfallButton then StarfallButton:Activate() end
+        if TimestreakButton then TimestreakButton:Activate() end
+        if KillstreakButton then KillstreakButton:Activate() end
+        if DarknessButton then DarknessButton:Activate() end
+
+        GiveKill2:FireServer()
+        GiveKill:FireServer()
+        GiveKill3:FireServer()
+        AddClick:FireServer()
+    end)
+end
+
+local function StartAutoClick()
+    if clickConnection then return end
+    clickConnection = RunService.Heartbeat:Connect(function()
+        if not autoClick or not running then return end
+        if delay<=0 then
+            FireClicks()
+        else
+            if time()-lastClick>=delay then
+                lastClick=time()
+                FireClicks()
+            end
+        end
+    end)
+end
+
+local function StopAutoClick()
+    autoClick=false
+    lastClick=0
+    if clickConnection then
+        clickConnection:Disconnect()
+        clickConnection=nil
+    end
+end
+
+--// 🔁 FPS BOOST (REVERSIBLE)
+local fpsConnection
+local stored = {}
+
+local function ApplyFPSBoost(state)
+    if state then
+        stored = {}
+
+        for _,v in pairs(game:GetDescendants()) do
+            if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") then
+                stored[v] = {Enabled = v.Enabled}
+                v.Enabled = false
+            end
+
+            if v:IsA("PostEffect") or v:IsA("Atmosphere") then
+                stored[v] = {Enabled = v.Enabled}
+                v.Enabled = false
+            end
+
+            if v:IsA("BasePart") then
+                stored[v] = stored[v] or {}
+                stored[v].Material = v.Material
+                stored[v].Reflectance = v.Reflectance
+
+                v.Material = Enum.Material.SmoothPlastic
+                v.Reflectance = 0
+            end
+
+            if v:IsA("Decal") or v:IsA("Texture") then
+                stored[v] = {Transparency = v.Transparency}
+                v.Transparency = 1
+            end
+        end
+
+        stored.Lighting = {
+            GlobalShadows = Lighting.GlobalShadows,
+            FogEnd = Lighting.FogEnd,
+            Brightness = Lighting.Brightness
+        }
+
+        Lighting.GlobalShadows = false
+        Lighting.FogEnd = 1e10
+        Lighting.Brightness = 1
+
+        settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+
+        fpsConnection = game.DescendantAdded:Connect(function(v)
+            if v:IsA("ParticleEmitter") or v:IsA("Trail") then
+                v.Enabled = false
+            end
+            if v:IsA("Decal") or v:IsA("Texture") then
+                v.Transparency = 1
+            end
+            if v:IsA("BasePart") then
+                v.Material = Enum.Material.SmoothPlastic
+            end
+        end)
+
+    else
+        for obj,data in pairs(stored) do
+            if typeof(obj) == "Instance" and obj then
+                pcall(function()
+                    for prop,val in pairs(data) do
+                        obj[prop] = val
+                    end
+                end)
+            end
+        end
+
+        if stored.Lighting then
+            Lighting.GlobalShadows = stored.Lighting.GlobalShadows
+            Lighting.FogEnd = stored.Lighting.FogEnd
+            Lighting.Brightness = stored.Lighting.Brightness
+        end
+
+        settings().Rendering.QualityLevel = Enum.QualityLevel.Automatic
+
+        if fpsConnection then
+            fpsConnection:Disconnect()
+            fpsConnection=nil
+        end
+
+        stored = {}
+    end
+end
+
+--// KILL EFFECT
+local killConnection
+local function ApplyKillBlock(state)
+    local sounds=workspace:FindFirstChild("Sounds")
+    if not sounds then return end
+    if state then
+        killConnection=sounds.ChildAdded:Connect(function(c)
+            if c.Name=="Kill" then c.Name="DisabledKill" end
+        end)
+        local e=sounds:FindFirstChild("Kill")
+        if e then e.Name="DisabledKill" end
+    else
+        if killConnection then killConnection:Disconnect(); killConnection=nil end
+        for _,v in pairs(sounds:GetChildren()) do
+            if v.Name=="DisabledKill" then v.Name="Kill" end
+        end
+    end
+end
+
+--// SLAPPLES (FIXED ONLY THIS PART)
+local autoSlapple=false
+local slappleThread
+
+local function Touch(p)
+    local char = player.Character
+    if not char then return end
+
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+
+    firetouchinterest(root,p,0)
+    firetouchinterest(root,p,1)
+end
+
+local function GetSlappleParts()
+    local parts = {}
+
+    local map = workspace:FindFirstChild("Map")
+    if not map then return parts end
+
+    local arena = map:FindFirstChild("MainArena")
+    if not arena then return parts end
+
+    local folder = arena:FindFirstChild("Folder") -- FIXED
+    if not folder then return parts end
+
+    local slapples = folder:FindFirstChild("Slapples")
+    if not slapples then return parts end
+
+    for _,obj in ipairs(slapples:GetChildren()) do
+        local slap = obj:FindFirstChild("Slapple")
+        if slap and slap:IsA("BasePart") then
+            if slap:FindFirstChildOfClass("TouchTransmitter") then
+                table.insert(parts,slap)
+            end
+        end
+    end
+
+    return parts
+end
+
+local function StartSlapple()
+    if slappleThread then return end
+
+    slappleThread = task.spawn(function()
+        while autoSlapple and running do
+            local parts = GetSlappleParts()
+
+            for _,part in ipairs(parts) do
+                if not autoSlapple then break end
+                Touch(part)
+                task.wait(0.02)
+            end
+
+            task.wait(0.1)
+        end
+        slappleThread=nil
+    end)
+end
+
+local function StopSlapple()
+    autoSlapple=false
+end
+
+--// PLATFORM
+local platformPart
+local platformTransparency=0
+
+local function TogglePlatform(state)
+    if state then
+        if platformPart then platformPart:Destroy() end
+        platformPart=Instance.new("Part")
+        platformPart.Size=Vector3.new(2048,1,2048)
+        platformPart.Position=Vector3.new(165.5,4345.37,-22.83)
+        platformPart.Anchored=true
+        platformPart.Transparency=platformTransparency
+        platformPart.Parent=workspace
+    else
+        if platformPart then platformPart:Destroy(); platformPart=nil end
+    end
+end
+
+--// UI
+CheatsTab:CreateToggle({
+    Name="Auto Click",
+    CurrentValue=false,
+    Callback=function(v)
+        if v then autoClick=true; StartAutoClick()
+        else StopAutoClick() end
+    end
+})
+
+CheatsTab:CreateToggle({Name="FPS Boost",CurrentValue=false,Callback=ApplyFPSBoost})
+
+CheatsTab:CreateParagraph({
+    Title=" ",
+    Content="Disable and re-enable if you had it enabled to get the E button if you are on mobile"
+})
+
+CheatsTab:CreateToggle({Name="Disable Kill Effect",CurrentValue=false,Callback=ApplyKillBlock})
+
+CheatsTab:CreateToggle({
+    Name="Auto Slapples",
+    CurrentValue=false,
+    Callback=function(v)
+        autoSlapple=v
+        if v then StartSlapple() else StopSlapple() end
+    end
+})
+
+CheatsTab:CreateToggle({Name="Spawn Platform",CurrentValue=false,Callback=TogglePlatform})
+
+CheatsTab:CreateInput({
+    Name="Platform Transparency (0-1)",
+    PlaceholderText="Value...",
+    Callback=function(t)
+        local n=tonumber(t)
+        if n then
+            n=math.clamp(n,0,1)
+            platformTransparency=n
+            if platformPart then platformPart.Transparency=n end
+        end
+    end
+})
+
+CheatsTab:CreateSlider({
+    Name="Click Delay",
+    Range={0,1},
+    Increment=0.01,
+    CurrentValue=0.1,
+    Callback=function(v) delay=v end
+})
+
+CheatsTab:CreateButton({Name="Manual Click",Callback=FireClicks})
+
+--// CREDITS
+CreditsTab:CreateParagraph({
+    Title="Credits",
+    Content="Script created by Mr_3242\nThanks for using the script!"
+})
+
+CreditsTab:CreateButton({
+    Name="Copy TikTok Link",
+    Callback=function()
+        setclipboard("https://www.tiktok.com/@Mr_3242")
+        Notify("Copied","TikTok link copied")
+    end
+})
+
+CreditsTab:CreateButton({
+    Name="Copy YouTube Link",
+    Callback=function()
+        setclipboard("https://www.youtube.com/@Mr_3242.")
+        Notify("Copied","YouTube link copied")
+    end
+})
+
+CreditsTab:CreateButton({
+    Name="Copy Twitch Link",
+    Callback=function()
+        setclipboard("https://m.twitch.tv/quantumx_42/home")
+        Notify("Copied","Twitch link copied")
+    end
+})
+
+--// UNLOAD
+getgenv().KillstreakUnload=function()
+    running=false
+    StopAutoClick()
+    StopSlapple()
+    ApplyFPSBoost(false)
+    ApplyKillBlock(false)
+
+    if platformPart then platformPart:Destroy(); platformPart=nil end
+    if killConnection then killConnection:Disconnect() end
+    if clickConnection then clickConnection:Disconnect() end
+
+    pcall(function() Rayfield:Destroy() end)
+    getgenv().KillstreakUnload=nil
+end
+
+UnloadTab:CreateButton({
+    Name="Unload Script",
+    Callback=function()
+        getgenv().KillstreakUnload()
+    end
+})
