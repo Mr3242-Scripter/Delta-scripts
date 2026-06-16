@@ -1,0 +1,209 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+--// WINDOW
+local Window = Rayfield:CreateWindow({
+    Name = "QuantumX Hub",
+    LoadingTitle = "Loading scripts...",
+    LoadingSubtitle = "Follow me in TikTok Mr_3242",
+    ConfigurationSaving = { Enabled = false }
+})
+
+--// NOTIFY WRAPPER
+local oldNotify = Rayfield.Notify
+
+if typeof(oldNotify) ~= "function" then
+    oldNotify = function() end
+end
+
+Rayfield.Notify = function(self, data)
+    if data and data.Title then
+        local t = tostring(data.Title)
+        if t:lower():find("rayfield") or t:lower():find("interface") then return end
+    end
+    return oldNotify(self, data)
+end
+
+local function Notify(t, c)
+    pcall(function()
+        Rayfield:Notify({
+            Title = tostring(t),
+            Content = tostring(c),
+            Duration = 3,
+            Image = 4483362458
+        })
+    end)
+end
+
+--// TABS
+local ScriptsTab = Window:CreateTab("Scripts", 4483362458)
+local CreditsTab = Window:CreateTab("Credits", 4483362458)
+local UnloadTab = Window:CreateTab("Unload", 4483362458)
+
+--// SOURCE
+local PROFILE_URL = "https://pastebin.com/u/Mr_3242"
+
+--// FUNCTIONS
+local function runScript(url)
+    pcall(function()
+        Rayfield:Destroy()
+    end)
+
+    task.wait()
+
+    pcall(function()
+        loadstring(game:HttpGet(url))()
+    end)
+end
+
+local function toRaw(id)
+    return "https://pastebin.com/raw/" .. tostring(id)
+end
+
+local function clean(text)
+    text = text or ""
+    text = text:gsub("&amp;", "&")
+    text = text:gsub("<.->", "")
+    text = text:gsub("%s+", " ")
+    text = text:gsub("^%s+", ""):gsub("%s+$", "")
+    return text
+end
+
+--// BLACKLIST
+local blacklist = {
+    "tools",
+    "faq",
+    "login",
+    "sign up",
+    "public pastes",
+    "syntax languages",
+    "archive",
+    "news",
+    "pro",
+    "dmca",
+
+    "My Hub!",
+    "fake loading progress",
+    "⚠️this is not a script ⚠️ daycare 💥 virus combinations",
+    "quiz bot script (the question about how to custom quiz",
+    "how to use loadstring",
+    "this isn’t a script its a ui library i made",
+    "universal in",
+    "contact",
+    "every script i created rests in peace here",
+    "rayfield made by sirius"
+}
+
+local function isBlocked(name)
+    local n = tostring(name or ""):lower()
+
+    for _, bad in ipairs(blacklist) do
+        if n:find(tostring(bad):lower(), 1, true) then
+            return true
+        end
+    end
+
+    return false
+end
+
+--// FETCH SCRIPTS
+local function getScripts()
+    local scripts = {}
+
+    local ok, html = pcall(function()
+        return game:HttpGet(PROFILE_URL)
+    end)
+
+    if not ok or type(html) ~= "string" then
+        return scripts
+    end
+
+    -- slightly safer pattern
+    for id, name in html:gmatch('href="/(%w+)"[^>]*>([^<]+)</a>') do
+        name = clean(name)
+
+        if name ~= "" and not isBlocked(name) then
+            table.insert(scripts, {
+                name = name,
+                url = toRaw(id)
+            })
+        end
+    end
+
+    table.sort(scripts, function(a, b)
+        return tostring(a.name):lower() < tostring(b.name):lower()
+    end)
+
+    return scripts
+end
+
+--// LOAD BUTTONS
+local scripts = getScripts()
+
+if type(scripts) ~= "table" then
+    scripts = {}
+end
+
+if #scripts == 0 then
+    ScriptsTab:CreateLabel("No scripts found.")
+else
+    for _, s in ipairs(scripts) do
+        ScriptsTab:CreateButton({
+            Name = tostring(s.name),
+            Callback = function()
+                runScript(s.url)
+            end
+        })
+    end
+end
+
+--// CREDITS
+CreditsTab:CreateParagraph({
+    Title = "Credits",
+    Content = "QuantumX hub created by Mr_3242\nThanks for using the hub!"
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy TikTok Link",
+    Callback = function()
+        if typeof(setclipboard) == "function" then
+            pcall(function()
+                setclipboard("https://www.tiktok.com/@Mr_3242")
+            end)
+        end
+        Notify("Copied", "TikTok link copied")
+    end
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy YouTube Link",
+    Callback = function()
+        if typeof(setclipboard) == "function" then
+            pcall(function()
+                setclipboard("https://www.youtube.com/@Mr_3242.")
+            end)
+        end
+        Notify("Copied", "YouTube link copied")
+    end
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy Twitch Link",
+    Callback = function()
+        if typeof(setclipboard) == "function" then
+            pcall(function()
+                setclipboard("https://m.twitch.tv/quantumx_42/home")
+            end)
+        end
+        Notify("Copied", "Twitch link copied")
+    end
+})
+
+--// UNLOAD
+UnloadTab:CreateButton({
+    Name = "Unload Script",
+    Callback = function()
+        pcall(function()
+            Rayfield:Destroy()
+        end)
+    end
+})
