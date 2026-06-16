@@ -1,0 +1,19 @@
+local old
+old = hookmetamethod(game, "__namecall", function(self, ...)
+    local method = getnamecallmethod()
+    local args = {...}
+
+    if method == "HttpGet" or method == "HttpGetAsync" then
+        local url = args[1]
+        local response = old(self, ...)
+
+        local output = "--" .. tostring(url) .. "\n" .. tostring(response)
+
+        print(output)
+        pcall(setclipboard, output)
+
+        return response
+    end
+
+    return old(self, ...)
+end)
