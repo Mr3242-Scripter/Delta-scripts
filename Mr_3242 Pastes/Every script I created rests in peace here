@@ -1,125 +1,179 @@
--- to use the script copy the loadstring it’s fine if you copy also the name of the script but with —- or else it won’t work
+-- ==================================================
+-- Every Script I Created — Rests In Peace Here
+-- Auto-generated from Mr_3242 Pastes
+-- ==================================================
 
--- My hub! (Every scripts in one script)
-loadstring(game:HttpGet("https://pastebin.com/raw/qYvYjvyD"))()
+-- Admin panel ! The glass bridge
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Admin%20panel%20%21%20The%20glass%20bridge"))()
 
--- auto clicker script    
-loadstring(game:HttpGet("https://pastebin.com/raw/H8qnxJ3A"))()
+-- Adonis anticheat bypass
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Adonis%20anticheat%20bypass"))()
 
--- keyless talentless script
-loadstring(game:HttpGet("https://pastebin.com/raw/zmQGj1bS"))()
+-- Anti Cheat remover (removes the anti cheat on some games)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Anti%20Cheat%20remover%20%28removes%20the%20anti%20cheat%20on%20some%20games%29"))()
 
--- RNG fights auto farm (semi functional) bucks and auto roll
-loadstring(game:HttpGet("https://pastebin.com/raw/mYGaRSvF"))()
+-- Auto clicker
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Auto%20clicker"))()
 
--- game name: Ban or Get Banned 🔨 auto farm cash
-loadstring(game:HttpGet("https://pastebin.com/raw/KQF73tyL"))()
-
--- ☎️ scam call center simulator REBOOTED script
-loadstring(game:HttpGet("https://pastebin.com/raw/jvAj4w0J"))()
-
--- Killstreak button test remastered script 
-loadstring(game:HttpGet("https://pastebin.com/raw/yBGyr4s9"))()
-
--- Timebomb anklebreak V2.0
-loadstring(game:HttpGet("https://pastebin.com/raw/8BKFxAPu"))()
-
--- Noodle vr fake vr
-loadstring(game:HttpGet("https://pastebin.com/raw/pFjin3hm"))()
-
--- Universal teleport gui v3!! (Fixed bugs)
-loadstring(game:HttpGet("https://pastebin.com/raw/SnXUd9FF"))()
-
--- Admin panel ! Only works in The glass bridge game link: https://www.roblox.com/games/8032701413/The-Glass-Bridge
---  Script:
-loadstring(game:HttpGet("https://pastebin.com/raw/6vS3yuyU"))()
-
--- Blind clone shot very op
-loadstring(game:HttpGet("https://pastebin.com/raw/kX1jGvAp"))()
-
--- [🌱] Grass Incremental Simulator op script
-loadstring(game:HttpGet("https://pastebin.com/raw/4CE1AmWQ"))()
-
--- Mr_3242 Multi-fling gui!! (Very op)
-loadstring(game:HttpGet("https://pastebin.com/raw/SKQ3eexj"))()
-
--- Chained [2 Player Obby] Op script (spawn mines ragdoll all…)
-loadstring(game:HttpGet("https://pastebin.com/raw/X3u133UU"))()
+-- Blind clone shot script (very op)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Blind%20clone%20shot%20script%20%28very%20op%29"))()
 
 -- Bridge Battles! Script (semi functional)
-loadstring(game:HttpGet("https://pastebin.com/raw/khVyFTpS"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Bridge%20Battles%21%20Script%20%28semi%20functional%29"))()
 
---  Impostors & Roles | Among Us esp (see who are impostors + full bright)
-loadstring(game:HttpGet("https://pastebin.com/raw/dEzMtpGU"))()
+-- Chained [2 Player Obby] Script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Chained%20[2%20Player%20Obby]%20Script"))()
 
--- Daycare 💥 script become scientist (please read the note under to understand how to use)
--- after executing click "Become Instant scientist" on the board in the map, and then click again on 1 month access
-loadstring(game:HttpGet("https://pastebin.com/raw/i93hmHAx"))()
+-- Cobalt
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Cobalt"))()
 
--- Quiz bot (fully interactive by others (they answer only)
-loadstring(game:HttpGet("https://pastebin.com/raw/HSqBVKTm"))()
--- here’s the answer about how to add custom quizzes
-https://pastebin.com/7mTZpf5R
+-- Daycare instant scientist
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Daycare%20instant%20scientist"))()
 
--- Enter Brainrot iPad/pc sized script
-loadstring(game:HttpGet("https://pastebin.com/raw/vuCzm75n"))()
+-- Dex++ decompiler fix
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Dex%2B%2B%20decompiler%20fix"))()
 
--- Enter Brainrot iphone sized script
-loadstring(game:HttpGet("https://pastebin.com/raw/Uu4uHd7U"))()
+-- Enter Brainrot iPad_pc sized script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Enter%20Brainrot%20iPad_pc%20sized%20script"))()
 
--- Speed Hub X (Key System cracked)
-loadstring(game:HttpGet("https://pastebin.com/raw/Ze9AZ9MN"))()
+-- Enter Brainrot iPhone sized script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Enter%20Brainrot%20iPhone%20sized%20script"))()
 
--- instant proximity prompts
-loadstring(game:HttpGet("https://pastebin.com/raw/HnQdRp9z"))()
+-- Find Who Slapped (Op script)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Find%20Who%20Slapped%20%28Op%20script%29"))()
 
--- OP A Very Hungry CaseOh 🧇 script (admin panel/ badly secured game)
-loadstring(game:HttpGet("https://pastebin.com/raw/kPS6Eg31"))()
+-- Find Who Slapped (testing)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Find%20Who%20Slapped%20%28testing%29"))()
 
--- Universal Badass experiences infinite money (doesn’t work on some games of badass experiences)
-loadstring(game:HttpGet("https://pastebin.com/raw/DFywyeBb"))()
-
--- Manipulating the values (recovered lost media) game name BAD CAT
-loadstring(game:HttpGet("https://pastebin.com/raw/ZhqWbV73"))()
-
--- Anti Cheat remover (removes the anti cheat on some Games)
-loadstring(game:HttpGet("https://pastebin.com/raw/LFBjxBKX"))()
-
--- Find Who Slapped (Auto dodge perfect hit ...)
-loadstring(game:HttpGet("https://pastebin.com/raw/KgyzGb87"))()
-
--- The Strongest battlegrounds Movesets
-loadstring(game:HttpGet("https://pastebin.com/raw/Zs1hWRCd"))()
-
--- Safety NOT Required! Auto farm
-loadstring(game:HttpGet("https://pastebin.com/raw/e2rFWKtr"))()
-
--- Universal sus animations..
-loadstring(game:HttpGet("https://pastebin.com/raw/pyRnL4d5"))()
-
--- 🚨BARRY'S PRISON RUN! (OBBY) OP Script
-loadstring(game:HttpGet("https://pastebin.com/raw/JtPG2BUq"))()
-
--- Natural Disasters Survival anti fall damage (this script is not game id locked)
-loadstring(game:HttpGet("https://pastebin.com/raw/S2xGq9Ud"))()
+-- Flee the Facility Script v4
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Flee%20the%20Facility%20Script%20v4"))()
 
 -- Fly gui
-loadstring(game:HttpGet("https://pastebin.com/raw/iN9ATjz7"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Fly%20gui"))()
 
--- Sub Place explorer
-loadstring(game:HttpGet("https://pastebin.com/raw/G57gYLJp"))()
+-- Frost walker boots R6 Universal
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Frost%20walker%20boots%20R6%20Universal"))()
+
+-- Fully invisible part remover
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Fully%20invisible%20part%20remover"))()
+
+-- HttpGet Monitor
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/HttpGet%20Monitor"))()
+
+-- Impostors & Roles | Among Us esp (see who are impostors + full bright)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Impostors%20%26%20Roles%20|%20Among%20Us%20esp%20%28see%20who%20are%20impostors%20%2B%20full%20bright%29"))()
+
+-- Key system cracked talentless (auto piano)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Key%20system%20cracked%20talentless%20%28auto%20piano%29"))()
+
+-- Killstreak button test remastered (fixed auto slapple)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Killstreak%20button%20test%20remastered%20%28fixed%20auto%20slapple%29"))()
 
 -- Makes any gui draggable (top bar only)
-loadstring(game:HttpGet("https://pastebin.com/raw/N8Fjyc6m"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Makes%20any%20gui%20draggable%20%28top%20bar%20only%29"))()
+
+-- Molyn Hub ⚠️this script isn’t made by me ⚠️
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Molyn%20Hub%20⚠️this%20script%20isn’t%20made%20by%20me%20⚠️"))()
 
 -- Molyn invisibility
-loadstring(game:HttpGet("https://pastebin.com/raw/pUSzr9n9"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Molyn%20invisibility"))()
 
--- Shiftlock
-loadstring(game:HttpGet("https://pastebin.com/raw/UZHKhRxS"))()
+-- Mr_3242 Multi-fling gui!!!
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Mr_3242%20Multi-fling%20gui%21%21%21"))()
+
+-- Murder vs Sherif Duels (game)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Murder%20vs%20Sherif%20Duels%20%28game%29"))()
+
+-- NDS anti fall damage  (this script is not game id locked)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/NDS%20anti%20fall%20damage%20%20%28this%20script%20is%20not%20game%20id%20locked%29"))()
+
+-- Nameless Admin
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Nameless%20Admin"))()
+
+-- Noodle vr fake vr
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Noodle%20vr%20fake%20vr"))()
+
+-- Npc Controller (open source and isn’t made by me )
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Npc%20Controller%20%28open%20source%20and%20isn’t%20made%20by%20me%20%29"))()
+
+-- OP A Very Hungry CaseOh 🧇 script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/OP%20A%20Very%20Hungry%20CaseOh%20🧇%20script"))()
+
+-- Op script BAD CAT
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Op%20script%20BAD%20CAT"))()
+
+-- Product Buyer
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Product%20Buyer"))()
+
+-- Quiz bot (fully interactive by others (they answer only)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Quiz%20bot%20%28fully%20interactive%20by%20others%20%28they%20answer%20only%29"))()
 
 -- R15 to R6 fe
-loadstring(game:HttpGet("https://pastebin.com/raw/67ER9Htw"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/R15%20to%20R6%20fe"))()
 
--- HttpGet Monitor (to capture scripts from hubs or things like that)
-loadstring(game:HttpGet("https://pastebin.com/raw/YRx0MjGX"))()
+-- RNG Fights auto farm (semi functional) and auto roll
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/RNG%20Fights%20auto%20farm%20%28semi%20functional%29%20and%20auto%20roll"))()
+
+-- Roblox Slap battles Dodecahedron Dave Obliterater
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Roblox%20Slap%20battles%20Dodecahedron%20Dave%20Obliterater"))()
+
+-- Safety NOT Required! Auto farm
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Safety%20NOT%20Required%21%20Auto%20farm"))()
+
+-- Shiftlock
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Shiftlock"))()
+
+-- Speed hub X (cracked key system)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Speed%20hub%20X%20%28cracked%20key%20system%29"))()
+
+-- Sub Place explorer
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Sub%20Place%20explorer"))()
+
+-- The Strongest battlegrounds Movesets
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/The%20Strongest%20battlegrounds%20Movesets"))()
+
+-- Timebomb anklebreak V2.0
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Timebomb%20anklebreak%20V2.0"))()
+
+-- Universal Badass experiences infinite money
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Universal%20Badass%20experiences%20infinite%20money"))()
+
+-- Universal infjump (kinda)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Universal%20infjump%20%28kinda%29"))()
+
+-- Universal sus animations..
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Universal%20sus%20animations.."))()
+
+-- Universal teleport gui v3!! (Fixed bugs)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Universal%20teleport%20gui%20v3%21%21%20%28Fixed%20bugs%29"))()
+
+-- VoidWare (hub) (I tested with 99 nights in the forest)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/VoidWare%20%28hub%29%20%28I%20tested%20with%2099%20nights%20in%20the%20forest%29"))()
+
+-- Voxels [🛠️] (game) ultimate Griefer (NEW)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Voxels%20[🛠️]%20%28game%29%20ultimate%20Griefer%20%28NEW%29"))()
+
+-- Voxels [🛠️] (game) ultimate Griefer (OLD)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Voxels%20[🛠️]%20%28game%29%20ultimate%20Griefer%20%28OLD%29"))()
+
+-- Wall climber
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Wall%20climber"))()
+
+-- Youtube Music Player
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/Youtube%20Music%20Player"))()
+
+-- [🌱] Grass Incremental Simulator Op script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/[🌱]%20Grass%20Incremental%20Simulator%20Op%20script"))()
+
+-- fast cash ( Ban or Get Banned 🔨 )
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/fast%20cash%20%28%20Ban%20or%20Get%20Banned%20🔨%20%29"))()
+
+-- instant proximity prompts
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/instant%20proximity%20prompts"))()
+
+-- ☎️ scam call center simulator REBOOTED script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/☎️%20scam%20call%20center%20simulator%20REBOOTED%20script"))()
+
+-- 🚨BARRY’S PRISON RUN! (OBBY) OP Script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/🚨BARRY’S%20PRISON%20RUN%21%20%28OBBY%29%20OP%20Script"))()
+
