@@ -1,0 +1,221 @@
+--// SERVICES
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+
+--// PLAYER
+local player = Players.LocalPlayer
+
+--// SAFE REEXECUTE
+if getgenv().KillstreakUnload then
+    pcall(getgenv().KillstreakUnload)
+end
+
+--// REMOTES
+local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+local RagdollRemote = Remotes:WaitForChild("Ragdoll")
+local MineRemote = Remotes:WaitForChild("PlaceMine")
+
+--// LOAD RAYFIELD
+local Rayfield
+repeat
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+    end)
+    if success and result then
+        Rayfield = result
+    else
+        task.wait(1)
+    end
+until Rayfield
+
+--// NOTIFICATION FILTER
+local oldNotify = Rayfield.Notify
+Rayfield.Notify = function(self, data)
+    if data and data.Title then
+        local t = tostring(data.Title)
+        if t:find("Rayfield") or t:find("Interface") then
+            return
+        end
+    end
+    return oldNotify(self, data)
+end
+
+--// CUSTOM NOTIFY
+local function Notify(title, content)
+    Rayfield:Notify({
+        Title = title,
+        Content = content,
+        Duration = 3
+    })
+end
+
+--// WINDOW
+local Window = Rayfield:CreateWindow({
+    Name = "Chained [2 Player Obby]",
+    LoadingTitle = "op trolls",
+    LoadingSubtitle = "follow me in TikTok Mr_3242",
+    ConfigurationSaving = { Enabled = false },
+    KeySystem = false
+})
+
+--// TABS
+local MainTab = Window:CreateTab("Main", 4483362458)
+local CreditsTab = Window:CreateTab("Credits", 4483362458)
+local UnloadTab = Window:CreateTab("Unload", 4483362458)
+
+--// STATES
+local running = true
+
+local ragdollEnabled = false
+local mineEnabled = false
+
+local mineDelay = 0.1
+
+local mineLoop
+local ragdollLoop
+
+--------------------------------------------------------
+-- RAGDOLL LOOP
+--------------------------------------------------------
+local function StartRagdoll()
+    if ragdollLoop then return end
+
+    ragdollLoop = task.spawn(function()
+        while ragdollEnabled and running do
+            for _, plr in ipairs(Players:GetPlayers()) do
+                if plr ~= player then
+                    pcall(function()
+                        RagdollRemote:FireServer(plr, true)
+                    end)
+                end
+            end
+            task.wait( )
+        end
+        ragdollLoop = nil
+    end)
+end
+
+local function StopRagdoll()
+    ragdollEnabled = false
+end
+
+--------------------------------------------------------
+-- MINE LOOP
+--------------------------------------------------------
+local function StartMines()
+    if mineLoop then return end
+
+    mineLoop = task.spawn(function()
+        while mineEnabled and running do
+            pcall(function()
+                MineRemote:FireServer()
+            end)
+            task.wait(mineDelay)
+        end
+        mineLoop = nil
+    end)
+end
+
+local function StopMines()
+    mineEnabled = false
+end
+
+--------------------------------------------------------
+-- UI ELEMENTS
+--------------------------------------------------------
+
+MainTab:CreateToggle({
+    Name = "Ragdoll Spam",
+    CurrentValue = false,
+    Callback = function(v)
+        ragdollEnabled = v
+        if v then
+            StartRagdoll()
+        else
+            StopRagdoll()
+        end
+    end
+})
+
+MainTab:CreateToggle({
+    Name = "Mine Spam",
+    CurrentValue = false,
+    Callback = function(v)
+        mineEnabled = v
+        if v then
+            StartMines()
+        else
+            StopMines()
+        end
+    end
+})
+
+MainTab:CreateSlider({
+    Name = "Mine Delay",
+    Range = {0, 1},
+    Increment = 0.05,
+    CurrentValue = 0.005,
+    Callback = function(v)
+        mineDelay = v
+    end
+})
+
+---------------------------------------------------------------------
+-- CREDITS
+---------------------------------------------------------------------
+CreditsTab:CreateParagraph({
+    Title = "Credits",
+    Content = "Script created by Mr_3242\nThanks for using the script!"
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy TikTok Link",
+    Callback = function()
+        setclipboard("https://www.tiktok.com/@Mr_3242")
+        Notify("Copied", "TikTok link copied")
+    end
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy YouTube Link",
+    Callback = function()
+        setclipboard("https://www.youtube.com/@Mr_3242.")
+        Notify("Copied", "YouTube link copied")
+    end
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy Twitch Link",
+    Callback = function()
+        setclipboard("https://m.twitch.tv/pantherarmy_42/home")
+        Notify("Copied", "Twitch link copied")
+    end
+})
+
+--------------------------------------------------------
+-- UNLOAD
+--------------------------------------------------------
+
+getgenv().KillstreakUnload = function()
+    running = false
+
+    ragdollEnabled = false
+    mineEnabled = false
+
+    if ragdollLoop then ragdollLoop = nil end
+    if mineLoop then mineLoop = nil end
+
+    pcall(function()
+        Rayfield:Destroy()
+    end)
+
+    getgenv().KillstreakUnload = nil
+end
+
+UnloadTab:CreateButton({
+    Name = "Unload Script",
+    Callback = function()
+        getgenv().KillstreakUnload()
+    end
+})

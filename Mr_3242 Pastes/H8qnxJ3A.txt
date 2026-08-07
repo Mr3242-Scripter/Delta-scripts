@@ -1,0 +1,550 @@
+-- Advanced Auto Clicker with Multiple Click Zones
+-- Compatible with PC and Mobile
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local mouse = player:GetMouse()
+
+-- Theme
+local theme = {
+    primary = Color3.fromRGB(100, 100, 255),
+    secondary = Color3.fromRGB(80, 80, 200),
+    background = Color3.fromRGB(15, 15, 20),
+    surface = Color3.fromRGB(25, 25, 35),
+    text = Color3.fromRGB(255, 255, 255),
+    textSecondary = Color3.fromRGB(180, 180, 200),
+    success = Color3.fromRGB(50, 200, 100),
+    error = Color3.fromRGB(255, 80, 80),
+    warning = Color3.fromRGB(255, 180, 50)
+}
+
+-- Configuration
+local LOGO_ASSET_ID = "rbxassetid://109421193232034"
+local clickZones = {}
+local autoClickerEnabled = false
+local currentSpeed = 0.1 -- Default 10 clicks per second
+local speedPresets = {
+    {name = "Slow (5/s)", speed = 0.2},
+    {name = "Normal (10/s)", speed = 0.1},
+    {name = "Fast (20/s)", speed = 0.05},
+    {name = "Very Fast (50/s)", speed = 0.02},
+    {name = "Ultra (100/s)", speed = 0.01}
+}
+local selectedSpeedIndex = 2
+
+-- Create GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "AutoClickerGUI"
+screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = true
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.Parent = playerGui
+
+-- Main Frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Name = "MainFrame"
+mainFrame.Size = UDim2.new(0, 350, 0, 450)
+mainFrame.Position = UDim2.new(0, 20, 0.5, -225)
+mainFrame.BackgroundColor3 = theme.background
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
+
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 12)
+mainCorner.Parent = mainFrame
+
+-- Make draggable
+local dragging = false
+local dragInput, dragStart, startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+mainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+mainFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+-- Header
+local header = Instance.new("Frame")
+header.Name = "Header"
+header.Size = UDim2.new(1, 0, 0, 70)
+header.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+header.BorderSizePixel = 0
+header.Parent = mainFrame
+
+local headerCorner = Instance.new("UICorner")
+headerCorner.CornerRadius = UDim.new(0, 12)
+headerCorner.Parent = header
+
+local headerFix = Instance.new("Frame")
+headerFix.Size = UDim2.new(1, 0, 0, 12)
+headerFix.Position = UDim2.new(0, 0, 1, -12)
+headerFix.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+headerFix.BorderSizePixel = 0
+headerFix.Parent = header
+
+-- Logo Frame
+local logoFrame = Instance.new("Frame")
+logoFrame.Name = "LogoFrame"
+logoFrame.Size = UDim2.new(0, 55, 0, 55)
+logoFrame.Position = UDim2.new(0, 10, 0.5, -27.5)
+logoFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+logoFrame.BorderSizePixel = 0
+logoFrame.Parent = header
+
+local logoCorner = Instance.new("UICorner")
+logoCorner.CornerRadius = UDim.new(0, 10)
+logoCorner.Parent = logoFrame
+
+local logoImage = Instance.new("ImageLabel")
+logoImage.Name = "LogoImage"
+logoImage.Size = UDim2.new(1, -8, 1, -8)
+logoImage.Position = UDim2.new(0, 4, 0, 4)
+logoImage.BackgroundTransparency = 1
+logoImage.Image = LOGO_ASSET_ID
+logoImage.ScaleType = Enum.ScaleType.Fit
+logoImage.Parent = logoFrame
+
+-- Title
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, -180, 1, 0)
+titleLabel.Position = UDim2.new(0, 75, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "MOLYN AUTO CLICKER"
+titleLabel.TextColor3 = theme.text
+titleLabel.TextSize = 20
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.Parent = header
+
+-- Close Button
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 40, 0, 40)
+closeButton.Position = UDim2.new(1, -50, 0.5, -20)
+closeButton.BackgroundColor3 = theme.error
+closeButton.Text = "✕"
+closeButton.TextColor3 = theme.text
+closeButton.TextSize = 20
+closeButton.Font = Enum.Font.GothamBold
+closeButton.BorderSizePixel = 0
+closeButton.Parent = header
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.Parent = closeButton
+
+-- Content
+local content = Instance.new("Frame")
+content.Name = "Content"
+content.Size = UDim2.new(1, -30, 1, -90)
+content.Position = UDim2.new(0, 15, 0, 80)
+content.BackgroundTransparency = 1
+content.Parent = mainFrame
+
+-- Status Label
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Size = UDim2.new(1, 0, 0, 30)
+statusLabel.Position = UDim2.new(0, 0, 0, 0)
+statusLabel.BackgroundTransparency = 1
+statusLabel.Text = "⏸️ Status: Disabled"
+statusLabel.TextColor3 = theme.textSecondary
+statusLabel.TextSize = 16
+statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+statusLabel.Font = Enum.Font.GothamBold
+statusLabel.Parent = content
+
+-- Toggle Button
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(1, 0, 0, 50)
+toggleButton.Position = UDim2.new(0, 0, 0, 35)
+toggleButton.BackgroundColor3 = theme.success
+toggleButton.Text = "▶️ START AUTO CLICKER"
+toggleButton.TextColor3 = theme.text
+toggleButton.TextSize = 16
+toggleButton.Font = Enum.Font.GothamBold
+toggleButton.BorderSizePixel = 0
+toggleButton.Parent = content
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0, 10)
+toggleCorner.Parent = toggleButton
+
+-- Speed Label
+local speedLabel = Instance.new("TextLabel")
+speedLabel.Size = UDim2.new(1, 0, 0, 25)
+speedLabel.Position = UDim2.new(0, 0, 0, 95)
+speedLabel.BackgroundTransparency = 1
+speedLabel.Text = "⚡ Speed: Normal (10/s)"
+speedLabel.TextColor3 = theme.text
+speedLabel.TextSize = 14
+speedLabel.TextXAlignment = Enum.TextXAlignment.Left
+speedLabel.Font = Enum.Font.GothamBold
+speedLabel.Parent = content
+
+-- Speed Buttons Container
+local speedContainer = Instance.new("Frame")
+speedContainer.Size = UDim2.new(1, 0, 0, 100)
+speedContainer.Position = UDim2.new(0, 0, 0, 125)
+speedContainer.BackgroundTransparency = 1
+speedContainer.Parent = content
+
+-- Create Speed Buttons
+local speedButtons = {}
+for i, preset in ipairs(speedPresets) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.48, -5, 0, 30)
+    
+    -- Position in grid (2 columns)
+    if i % 2 == 1 then
+        btn.Position = UDim2.new(0, 0, 0, math.floor((i-1)/2) * 35)
+    else
+        btn.Position = UDim2.new(0.52, 0, 0, math.floor((i-1)/2) * 35)
+    end
+    
+    btn.BackgroundColor3 = i == selectedSpeedIndex and theme.primary or theme.surface
+    btn.Text = preset.name
+    btn.TextColor3 = theme.text
+    btn.TextSize = 12
+    btn.Font = Enum.Font.Gotham
+    btn.BorderSizePixel = 0
+    btn.Parent = speedContainer
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 8)
+    btnCorner.Parent = btn
+    
+    speedButtons[i] = btn
+end
+
+-- Click Zones Label
+local zonesLabel = Instance.new("TextLabel")
+zonesLabel.Size = UDim2.new(1, 0, 0, 25)
+zonesLabel.Position = UDim2.new(0, 0, 0, 235)
+zonesLabel.BackgroundTransparency = 1
+zonesLabel.Text = "🎯 Click Zones: 0"
+zonesLabel.TextColor3 = theme.text
+zonesLabel.TextSize = 14
+zonesLabel.TextXAlignment = Enum.TextXAlignment.Left
+zonesLabel.Font = Enum.Font.GothamBold
+zonesLabel.Parent = content
+
+-- Add Zone Button
+local addZoneButton = Instance.new("TextButton")
+addZoneButton.Size = UDim2.new(1, 0, 0, 45)
+addZoneButton.Position = UDim2.new(0, 0, 0, 265)
+addZoneButton.BackgroundColor3 = theme.primary
+addZoneButton.Text = "➕ ADD CLICK ZONE"
+addZoneButton.TextColor3 = theme.text
+addZoneButton.TextSize = 15
+addZoneButton.Font = Enum.Font.GothamBold
+addZoneButton.BorderSizePixel = 0
+addZoneButton.Parent = content
+
+local addZoneCorner = Instance.new("UICorner")
+addZoneCorner.CornerRadius = UDim.new(0, 10)
+addZoneCorner.Parent = addZoneButton
+
+-- Clear Zones Button
+local clearZonesButton = Instance.new("TextButton")
+clearZonesButton.Size = UDim2.new(1, 0, 0, 45)
+clearZonesButton.Position = UDim2.new(0, 0, 0, 315)
+clearZonesButton.BackgroundColor3 = theme.error
+clearZonesButton.Text = "🗑️ CLEAR ALL ZONES"
+clearZonesButton.TextColor3 = theme.text
+clearZonesButton.TextSize = 15
+clearZonesButton.Font = Enum.Font.GothamBold
+clearZonesButton.BorderSizePixel = 0
+clearZonesButton.Parent = content
+
+local clearZonesCorner = Instance.new("UICorner")
+clearZonesCorner.CornerRadius = UDim.new(0, 10)
+clearZonesCorner.Parent = clearZonesButton
+
+-- Functions
+local function createTween(object, properties, duration)
+    duration = duration or 0.3
+    local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    return TweenService:Create(object, tweenInfo, properties)
+end
+
+local function updateZonesCount()
+    zonesLabel.Text = "🎯 Click Zones: " .. #clickZones
+end
+
+local function createClickZone(position)
+    local zone = Instance.new("Frame")
+    zone.Name = "ClickZone"
+    zone.Size = UDim2.new(0, 60, 0, 60)
+    zone.Position = UDim2.new(0, position.X - 30, 0, position.Y - 30)
+    zone.BackgroundColor3 = theme.primary
+    zone.BackgroundTransparency = 0.5
+    zone.BorderSizePixel = 2
+    zone.BorderColor3 = theme.text
+    zone.ZIndex = 10
+    zone.Parent = screenGui
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(1, 0)
+    corner.Parent = zone
+    
+    -- Center indicator
+    local center = Instance.new("Frame")
+    center.Name = "Center"
+    center.Size = UDim2.new(0, 8, 0, 8)
+    center.Position = UDim2.new(0.5, -4, 0.5, -4)
+    center.BackgroundColor3 = theme.text
+    center.BorderSizePixel = 0
+    center.Parent = zone
+    
+    local centerCorner = Instance.new("UICorner")
+    centerCorner.CornerRadius = UDim.new(1, 0)
+    centerCorner.Parent = center
+    
+    -- Close button for zone
+    local closeZoneBtn = Instance.new("TextButton")
+    closeZoneBtn.Size = UDim2.new(0, 20, 0, 20)
+    closeZoneBtn.Position = UDim2.new(1, -22, 0, 2)
+    closeZoneBtn.BackgroundColor3 = theme.error
+    closeZoneBtn.Text = ""
+    closeZoneBtn.TextColor3 = theme.text
+    closeZoneBtn.TextSize = 12
+    closeZoneBtn.Font = Enum.Font.GothamBold
+    closeZoneBtn.BorderSizePixel = 0
+    closeZoneBtn.Parent = zone
+    
+    local closeZoneCorner = Instance.new("UICorner")
+    closeZoneCorner.CornerRadius = UDim.new(1, 0)
+    closeZoneCorner.Parent = closeZoneBtn
+    
+    -- Make zone draggable
+    local zoneDragging = false
+    local zoneDragStart, zoneStartPos
+    
+    zone.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            zoneDragging = true
+            zoneDragStart = input.Position
+            zoneStartPos = zone.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    zoneDragging = false
+                end
+            end)
+        end
+    end)
+    
+    zone.InputChanged:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) and zoneDragging then
+            local delta = input.Position - zoneDragStart
+            zone.Position = UDim2.new(zoneStartPos.X.Scale, zoneStartPos.X.Offset + delta.X, zoneStartPos.Y.Scale, zoneStartPos.Y.Offset + delta.Y)
+        end
+    end)
+    
+    -- Remove zone on close
+    closeZoneBtn.MouseButton1Click:Connect(function()
+        for i, z in ipairs(clickZones) do
+            if z == zone then
+                table.remove(clickZones, i)
+                break
+            end
+        end
+        zone:Destroy()
+        updateZonesCount()
+    end)
+    
+    -- Pulse animation
+    local pulseIn = createTween(zone, {BackgroundTransparency = 0.3}, 0.5)
+    local pulseOut = createTween(zone, {BackgroundTransparency = 0.6}, 0.5)
+    
+    pulseIn.Completed:Connect(function()
+        pulseOut:Play()
+    end)
+    
+    pulseOut.Completed:Connect(function()
+        if zone.Parent then
+            pulseIn:Play()
+        end
+    end)
+    
+    pulseIn:Play()
+    
+    table.insert(clickZones, zone)
+    updateZonesCount()
+    
+    return zone
+end
+
+local function simulateClick(position)
+    -- Use VirtualInputManager for accurate clicking
+    local vim = game:GetService("VirtualInputManager")
+    
+    -- Get the actual screen position (accounting for UI scaling)
+    local camera = workspace.CurrentCamera
+    local viewportSize = camera.ViewportSize
+    
+    -- Calculate the correct position
+    local actualX = position.X
+    local actualY = position.Y
+    
+    -- Mouse down and up to simulate click at exact position
+    vim:SendMouseButtonEvent(actualX, actualY, 0, true, game, 0)
+    task.wait(0.01)
+    vim:SendMouseButtonEvent(actualX, actualY, 0, false, game, 0)
+end
+
+-- Auto Clicker Loop
+local autoClickerConnection
+local function startAutoClicker()
+    if autoClickerConnection then
+        autoClickerConnection:Disconnect()
+    end
+    
+    autoClickerConnection = RunService.Heartbeat:Connect(function()
+        if autoClickerEnabled and #clickZones > 0 then
+            for _, zone in ipairs(clickZones) do
+                if zone and zone.Parent then
+                    -- Get the absolute position of the zone
+                    local absPos = zone.AbsolutePosition
+                    local absSize = zone.AbsoluteSize
+                    
+                    -- Calculate the center position of the zone
+                    local centerX = absPos.X + (absSize.X / 2)
+                    local centerY = absPos.Y + (absSize.Y / 2)
+                    
+                    -- Account for GUI inset (top bar on mobile/desktop)
+                    local guiInset = game:GetService("GuiService"):GetGuiInset()
+                    
+                    -- Adjust position with inset
+                    local finalX = centerX
+                    local finalY = centerY + guiInset.Y
+                    
+                    simulateClick(Vector2.new(finalX, finalY))
+                end
+            end
+            task.wait(currentSpeed)
+        end
+    end)
+end
+
+-- Button Events
+toggleButton.MouseButton1Click:Connect(function()
+    autoClickerEnabled = not autoClickerEnabled
+    
+    if autoClickerEnabled then
+        if #clickZones == 0 then
+            autoClickerEnabled = false
+            statusLabel.Text = "⚠️ Status: Add zones first!"
+            statusLabel.TextColor3 = theme.warning
+            return
+        end
+        
+        toggleButton.Text = "⏸️ STOP AUTO CLICKER"
+        toggleButton.BackgroundColor3 = theme.error
+        statusLabel.Text = "✅ Status: Active"
+        statusLabel.TextColor3 = theme.success
+        startAutoClicker()
+    else
+        toggleButton.Text = "▶️ START AUTO CLICKER"
+        toggleButton.BackgroundColor3 = theme.success
+        statusLabel.Text = "⏸️ Status: Disabled"
+        statusLabel.TextColor3 = theme.textSecondary
+    end
+end)
+
+for i, btn in ipairs(speedButtons) do
+    btn.MouseButton1Click:Connect(function()
+        selectedSpeedIndex = i
+        currentSpeed = speedPresets[i].speed
+        speedLabel.Text = "⚡ Speed: " .. speedPresets[i].name
+        
+        for j, b in ipairs(speedButtons) do
+            b.BackgroundColor3 = j == i and theme.primary or theme.surface
+        end
+    end)
+end
+
+local addingZone = false
+addZoneButton.MouseButton1Click:Connect(function()
+    if addingZone then return end
+    addingZone = true
+    
+    addZoneButton.Text = "👆 CLICK ANYWHERE TO PLACE"
+    addZoneButton.BackgroundColor3 = theme.warning
+    
+    local connection
+    connection = UserInputService.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            local position = input.Position
+            createClickZone(position)
+            
+            addZoneButton.Text = "➕ ADD CLICK ZONE"
+            addZoneButton.BackgroundColor3 = theme.primary
+            addingZone = false
+            connection:Disconnect()
+        end
+    end)
+end)
+
+clearZonesButton.MouseButton1Click:Connect(function()
+    for _, zone in ipairs(clickZones) do
+        if zone then
+            zone:Destroy()
+        end
+    end
+    clickZones = {}
+    updateZonesCount()
+    
+    if autoClickerEnabled then
+        autoClickerEnabled = false
+        toggleButton.Text = "▶️ START AUTO CLICKER"
+        toggleButton.BackgroundColor3 = theme.success
+        statusLabel.Text = "⏸️ Status: Disabled"
+        statusLabel.TextColor3 = theme.textSecondary
+    end
+end)
+
+closeButton.MouseButton1Click:Connect(function()
+    if autoClickerConnection then
+        autoClickerConnection:Disconnect()
+    end
+    for _, zone in ipairs(clickZones) do
+        if zone then
+            zone:Destroy()
+        end
+    end
+    screenGui:Destroy()
+end)
+
+-- Initial animation
+mainFrame.Size = UDim2.new(0, 0, 0, 0)
+createTween(mainFrame, {Size = UDim2.new(0, 350, 0, 450)}, 0.5, Enum.EasingStyle.Back):Play()
