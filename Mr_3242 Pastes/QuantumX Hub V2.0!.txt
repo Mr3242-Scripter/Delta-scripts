@@ -20,8 +20,8 @@ local Window = Rayfield:CreateWindow({
 ---------------------------------------------------
 -- CONFIG
 ---------------------------------------------------
-local PRIMARY_INDEX = "https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/refs/heads/main/Mr_3242%20Pastes/QuantumX%20Script%20list.txt"
-local PROFILE_URL = "https://pastebin.com/u/Mr_3242"
+local GITHUB_API = "https://api.github.com/repos/Mr3242-Scripter/Delta-scripts/contents/Mr_3242%20Pastes?ref=main"
+local GITHUB_RAW_BASE = "https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Mr_3242%20Pastes/"
 
 ---------------------------------------------------
 -- NOTIFY
@@ -41,22 +41,24 @@ end
 -- BLACKLIST
 ---------------------------------------------------
 local blacklist = {
-    "tools","faq","login","sign up","public pastes", "contact", "Quiz bot script (the question about how to custom quiz here’s the answer this isn’t the script)","Fake loading progress", "⚠️this is not a script ⚠️ Daycare 💥 virus combinations", "QuantumX Script list", 
-    "syntax languages","archive","news","pro","dmca",
-    "QuantumX Hub V2.0!","This isn’t a script its a Ui Library i made","How to use loadstring",
+    "quiz bot script (the question about how to custom quiz here’s the answer this isn’t the script)",
+    "fake loading progress",
+    "⚠️this is not a script ⚠️ daycare 💥 virus combinations",
+    "QuantumX Script list.txt",
+    "quantumx hub v2.0!",
+    "this isn’t a script its a ui library i made",
+    "how to use loadstring",
     "rayfield made by sirius"
 }
 
 local function isBlocked(name)
     name = tostring(name or ""):lower()
-
     for i = 1, #blacklist do
         local bad = tostring(blacklist[i] or ""):lower()
         if bad ~= "" and name:find(bad, 1, true) then
             return true
         end
     end
-
     return false
 end
 
@@ -83,20 +85,16 @@ end
 -- HTTP
 ---------------------------------------------------
 local function httpGet(url, retries)
-    retries = retries or 2
-
+    retries = retries or 3
     for i = 1, retries do
         local ok, res = pcall(function()
             return game:HttpGet(url)
         end)
-
-        if ok and type(res) == "string" and #res > 20 then
+        if ok and type(res) == "string" and #res > 0 then
             return res
         end
-
-        task.wait(0.15 * i)
+        task.wait(0.25 * i)
     end
-
     return nil
 end
 
@@ -106,9 +104,21 @@ end
 local function clean(text)
     return (text or "")
         :gsub("&amp;", "&")
+        :gsub("&quot;", '"')
+        :gsub("&#39;", "'")
         :gsub("<.->", "")
         :gsub("%s+", " ")
         :match("^%s*(.-)%s*$")
+end
+
+---------------------------------------------------
+-- URL ENCODE
+---------------------------------------------------
+local function urlEncode(str)
+    return tostring(str)
+        :gsub("([^%w%-_%.~])", function(c)
+            return string.format("%%%02X", string.byte(c))
+        end)
 end
 
 ---------------------------------------------------
@@ -116,19 +126,17 @@ end
 ---------------------------------------------------
 local function getCategory(name)
     local n = name:lower()
-
-    if n:find("admin") then
+    if n:find("admin", 1, true) then
         return "Admin"
-    elseif n:find("hub") then
+    elseif n:find("hub", 1, true) then
         return "Hub"
-    elseif n:find("fly") or n:find("esp") or n:find("teleport") then
+    elseif n:find("fly", 1, true) or n:find("esp", 1, true) or n:find("teleport", 1, true) then
         return "Exploits"
-    elseif n:find("tool") or n:find("gui") then
+    elseif n:find("tool", 1, true) or n:find("gui", 1, true) then
         return "Tools"
-    elseif n:find("game") or n:find("obby") or n:find("simulator") then
+    elseif n:find("game", 1, true) or n:find("obby", 1, true) or n:find("simulator", 1, true) then
         return "Games"
     end
-
     return "Misc"
 end
 
@@ -138,12 +146,14 @@ end
 local seen = {}
 
 local function addScript(name, url)
-    if isBlocked(name) then return end
-    if seen[url] then return end
+    name = clean(name)
+    if name == "" or isBlocked(name) or seen[url] then
+        return
+    end
 
     seen[url] = true
-
     local cat = getCategory(name)
+
     table.insert(categories[cat], {
         name = name,
         url = url
@@ -151,21 +161,18 @@ local function addScript(name, url)
 end
 
 ---------------------------------------------------
--- PARSERS
+-- PARSE GITHUB API
 ---------------------------------------------------
-local function parsePrimary(data)
-    for line in data:gmatch("[^\r\n]+") do
-        local name, url = line:match("^(.-)%s*=%s*(https://pastebin%.com/raw/%w+)")
-        if name and url then
-            addScript(clean(name), url)
-        end
-    end
-end
+local function parseGitHub(data)
+    for name in data:gmatch('"name"%s*:%s*"([^"]+%.txt)"') do
+        name = name:gsub("\\u0027", "'")
+        name = name:gsub('\\"', '"')
 
-local function parseProfile(html)
-    for id, name in html:gmatch('href="/(%w+)"[^>]*>([^<]+)</a>') do
-        local url = "https://pastebin.com/raw/" .. id
-        addScript(clean(name), url)
+        local displayName = name:gsub("%.txt$", "")
+        local encodedName = urlEncode(name)
+        local url = GITHUB_RAW_BASE .. encodedName
+
+        addScript(displayName, url)
     end
 end
 
@@ -173,10 +180,19 @@ end
 -- RUN SCRIPT
 ---------------------------------------------------
 local function runScript(url)
+    Notify("Loading", "Downloading script...")
+
     local content = httpGet(url, 3)
 
-    if not content or content:lower():find("<html") then
+    if not content or #content < 20 then
         Notify("Error", "Failed to load script")
+        return
+    end
+
+    local lower = content:lower()
+
+    if lower:find("<html", 1, true) or lower:find("<!doctype", 1, true) then
+        Notify("Error", "GitHub returned an invalid file")
         return
     end
 
@@ -187,11 +203,15 @@ local function runScript(url)
     task.wait(0.1)
 
     local ok, err = pcall(function()
-        loadstring(content)()
+        local fn = loadstring(content)
+        if not fn then
+            error("loadstring failed")
+        end
+        fn()
     end)
 
     if not ok then
-        Notify("Execution Error", err or "Unknown error")
+        Notify("Execution Error", tostring(err or "Unknown error"))
     end
 end
 
@@ -203,6 +223,10 @@ local function buildUI()
         local list = categories[catName]
 
         if #list > 0 then
+            table.sort(list, function(a, b)
+                return a.name:lower() < b.name:lower()
+            end)
+
             local tab = Window:CreateTab(catName, 4483362458)
             tabs[catName] = tab
 
@@ -222,17 +246,19 @@ end
 -- LOAD EVERYTHING
 ---------------------------------------------------
 task.spawn(function()
-    local primary = httpGet(PRIMARY_INDEX, 2)
-    if primary then parsePrimary(primary) end
+    local data = httpGet(GITHUB_API, 3)
 
-    local profile = httpGet(PROFILE_URL, 2)
-    if profile then parseProfile(profile) end
+    if not data then
+        Notify("Error", "Failed to access GitHub")
+    else
+        parseGitHub(data)
+    end
 
     buildUI()
 
     ---------------------------------------------------
-    -- STATIC TABS
-   ---------------------------------------------------
+    -- CREDITS
+    ---------------------------------------------------
     local CreditsTab = Window:CreateTab("Credits", 4483362458)
 
     CreditsTab:CreateParagraph({
@@ -250,23 +276,30 @@ task.spawn(function()
 
     CreditsTab:CreateButton({
         Name = "Copy TikTok",
-        Callback = function() copy("https://www.tiktok.com/@Mr_3242") end
+        Callback = function()
+            copy("https://www.tiktok.com/@Mr_3242")
+        end
     })
 
     CreditsTab:CreateButton({
         Name = "Copy YouTube",
-        Callback = function() copy("https://www.youtube.com/@Mr_3242.") end
+        Callback = function()
+            copy("https://www.youtube.com/@Mr_3242.")
+        end
     })
 
     CreditsTab:CreateButton({
         Name = "Copy Twitch",
-        Callback = function() copy("https://m.twitch.tv/quantumx_42/home") end
+        Callback = function()
+            copy("https://m.twitch.tv/quantumx_42/home")
+        end
     })
 
----------------------------------------------------
--- UNLOAD
----------------------------------------------------
+    ---------------------------------------------------
+    -- UNLOAD
+    ---------------------------------------------------
     local UnloadTab = Window:CreateTab("Unload", 4483362458)
+
     UnloadTab:CreateButton({
         Name = "Unload Script",
         Callback = function()
