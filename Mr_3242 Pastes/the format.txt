@@ -1,0 +1,35 @@
+Example 1
+=========
+
+Original sequence:
+    10100
+
+Run decomposition:
+    10 - 10 - 0
+
+Rewrite rule:
+    Zero‑terminated runs → contiguous runs
+    Last bit is preserved
+
+Forward transformation:
+    10 → 00
+    10 → 11
+    0  → 0
+    Combined: 00110
+
+Transformed sequence:
+    00110
+
+Run count comparison:
+    Before: 4 runs
+    After:  3 runs
+
+Reversibility check:
+    00 → 10
+    11 → 10
+    0  → 0
+    Combined: 10100
+
+Statistical effect:
+    Run count decreased by 1.
+    This contributes to the cumulative bias used to detect a 1‑encoding.

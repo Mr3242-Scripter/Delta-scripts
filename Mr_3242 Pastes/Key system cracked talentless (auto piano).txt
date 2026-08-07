@@ -1,0 +1,7 @@
+for i = 1, 999999 do
+    _G[tostring(i)] = true
+    if i <= 999 then
+        _G[string.format("%04d", i)] = true
+    end
+end
+loadstring(game:HttpGet("https://hellohellohell0.com/talentless-raw/TALENTLESS.lua", true))()
