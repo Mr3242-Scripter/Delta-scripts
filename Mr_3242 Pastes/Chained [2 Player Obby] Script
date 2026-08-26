@@ -69,11 +69,13 @@ local running = true
 
 local ragdollEnabled = false
 local mineEnabled = false
+local mineCleanerEnabled = false
 
 local mineDelay = 0.1
 
 local mineLoop
 local ragdollLoop
+local mineCleanerLoop
 
 --------------------------------------------------------
 -- RAGDOLL LOOP
@@ -90,8 +92,9 @@ local function StartRagdoll()
                     end)
                 end
             end
-            task.wait( )
+            task.wait()
         end
+
         ragdollLoop = nil
     end)
 end
@@ -111,14 +114,72 @@ local function StartMines()
             pcall(function()
                 MineRemote:FireServer()
             end)
+
             task.wait(mineDelay)
         end
+
         mineLoop = nil
     end)
 end
 
 local function StopMines()
     mineEnabled = false
+end
+
+--------------------------------------------------------
+-- MINE CLEANER
+--------------------------------------------------------
+local function RemoveMineOrExplosion(obj)
+    if obj.Name == "Mine" or obj:IsA("Explosion") then
+        pcall(function()
+            obj:Destroy()
+        end)
+    end
+end
+
+local mineAddedConnection
+
+local function StartMineCleaner()
+    if mineCleanerLoop then return end
+
+    -- Remove existing objects
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        RemoveMineOrExplosion(obj)
+    end
+
+    -- Remove newly-created objects immediately
+    mineAddedConnection = workspace.DescendantAdded:Connect(function(obj)
+        if mineCleanerEnabled and running then
+            RemoveMineOrExplosion(obj)
+        end
+    end)
+
+    -- Failsafe scan
+    mineCleanerLoop = task.spawn(function()
+        while mineCleanerEnabled and running do
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                RemoveMineOrExplosion(obj)
+            end
+
+            task.wait(0.1)
+        end
+
+        mineCleanerLoop = nil
+    end)
+end
+
+local function StopMineCleaner()
+    mineCleanerEnabled = false
+
+    if mineAddedConnection then
+        pcall(function()
+            mineAddedConnection:Disconnect()
+        end)
+
+        mineAddedConnection = nil
+    end
+
+    mineCleanerLoop = nil
 end
 
 --------------------------------------------------------
@@ -130,6 +191,7 @@ MainTab:CreateToggle({
     CurrentValue = false,
     Callback = function(v)
         ragdollEnabled = v
+
         if v then
             StartRagdoll()
         else
@@ -143,10 +205,25 @@ MainTab:CreateToggle({
     CurrentValue = false,
     Callback = function(v)
         mineEnabled = v
+
         if v then
             StartMines()
         else
             StopMines()
+        end
+    end
+})
+
+MainTab:CreateToggle({
+    Name = "Mine remover (removes any mine only on your side)",
+    CurrentValue = false,
+    Callback = function(v)
+        mineCleanerEnabled = v
+
+        if v then
+            StartMineCleaner()
+        else
+            StopMineCleaner()
         end
     end
 })
@@ -164,6 +241,7 @@ MainTab:CreateSlider({
 ---------------------------------------------------------------------
 -- CREDITS
 ---------------------------------------------------------------------
+
 CreditsTab:CreateParagraph({
     Title = "Credits",
     Content = "Script created by Mr_3242\nThanks for using the script!"
@@ -202,9 +280,19 @@ getgenv().KillstreakUnload = function()
 
     ragdollEnabled = false
     mineEnabled = false
+    mineCleanerEnabled = false
 
-    if ragdollLoop then ragdollLoop = nil end
-    if mineLoop then mineLoop = nil end
+    if mineAddedConnection then
+        pcall(function()
+            mineAddedConnection:Disconnect()
+        end)
+
+        mineAddedConnection = nil
+    end
+
+    ragdollLoop = nil
+    mineLoop = nil
+    mineCleanerLoop = nil
 
     pcall(function()
         Rayfield:Destroy()
