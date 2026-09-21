@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/refs/heads/main/Mr_3242%20Pastes/(Game%3A%20Slap%20Battles)%20SisyphusPrime.lua"))()
