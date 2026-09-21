@@ -1,0 +1,125 @@
+-- to use the script copy the loadstring it’s fine if you copy also the name of the script but with —- or else it won’t work
+
+-- My hub! (Every scripts in one script)
+loadstring(game:HttpGet("https://pastebin.com/raw/qYvYjvyD"))()
+
+-- auto clicker script    
+loadstring(game:HttpGet("https://pastebin.com/raw/H8qnxJ3A"))()
+
+-- keyless talentless script
+loadstring(game:HttpGet("https://pastebin.com/raw/zmQGj1bS"))()
+
+-- RNG fights auto farm (semi functional) bucks and auto roll
+loadstring(game:HttpGet("https://pastebin.com/raw/mYGaRSvF"))()
+
+-- game name: Ban or Get Banned 🔨 auto farm cash
+loadstring(game:HttpGet("https://pastebin.com/raw/KQF73tyL"))()
+
+-- ☎️ scam call center simulator REBOOTED script
+loadstring(game:HttpGet("https://pastebin.com/raw/jvAj4w0J"))()
+
+-- Killstreak button test remastered script 
+loadstring(game:HttpGet("https://pastebin.com/raw/yBGyr4s9"))()
+
+-- Timebomb anklebreak V2.0
+loadstring(game:HttpGet("https://pastebin.com/raw/8BKFxAPu"))()
+
+-- Noodle vr fake vr
+loadstring(game:HttpGet("https://pastebin.com/raw/pFjin3hm"))()
+
+-- Universal teleport gui v3!! (Fixed bugs)
+loadstring(game:HttpGet("https://pastebin.com/raw/SnXUd9FF"))()
+
+-- Admin panel ! Only works in The glass bridge game link: https://www.roblox.com/games/8032701413/The-Glass-Bridge
+--  Script:
+loadstring(game:HttpGet("https://pastebin.com/raw/6vS3yuyU"))()
+
+-- Blind clone shot very op
+loadstring(game:HttpGet("https://pastebin.com/raw/kX1jGvAp"))()
+
+-- [🌱] Grass Incremental Simulator op script
+loadstring(game:HttpGet("https://pastebin.com/raw/4CE1AmWQ"))()
+
+-- Mr_3242 Multi-fling gui!! (Very op)
+loadstring(game:HttpGet("https://pastebin.com/raw/SKQ3eexj"))()
+
+-- Chained [2 Player Obby] Op script (spawn mines ragdoll all…)
+loadstring(game:HttpGet("https://pastebin.com/raw/X3u133UU"))()
+
+-- Bridge Battles! Script (semi functional)
+loadstring(game:HttpGet("https://pastebin.com/raw/khVyFTpS"))()
+
+--  Impostors & Roles | Among Us esp (see who are impostors + full bright)
+loadstring(game:HttpGet("https://pastebin.com/raw/dEzMtpGU"))()
+
+-- Daycare 💥 script become scientist (please read the note under to understand how to use)
+-- after executing click "Become Instant scientist" on the board in the map, and then click again on 1 month access
+loadstring(game:HttpGet("https://pastebin.com/raw/i93hmHAx"))()
+
+-- Quiz bot (fully interactive by others (they answer only)
+loadstring(game:HttpGet("https://pastebin.com/raw/HSqBVKTm"))()
+-- here’s the answer about how to add custom quizzes
+https://pastebin.com/7mTZpf5R
+
+-- Enter Brainrot iPad/pc sized script
+loadstring(game:HttpGet("https://pastebin.com/raw/vuCzm75n"))()
+
+-- Enter Brainrot iphone sized script
+loadstring(game:HttpGet("https://pastebin.com/raw/Uu4uHd7U"))()
+
+-- Speed Hub X (Key System cracked)
+loadstring(game:HttpGet("https://pastebin.com/raw/Ze9AZ9MN"))()
+
+-- instant proximity prompts
+loadstring(game:HttpGet("https://pastebin.com/raw/HnQdRp9z"))()
+
+-- OP A Very Hungry CaseOh 🧇 script (admin panel/ badly secured game)
+loadstring(game:HttpGet("https://pastebin.com/raw/kPS6Eg31"))()
+
+-- Universal Badass experiences infinite money (doesn’t work on some games of badass experiences)
+loadstring(game:HttpGet("https://pastebin.com/raw/DFywyeBb"))()
+
+-- Manipulating the values (recovered lost media) game name BAD CAT
+loadstring(game:HttpGet("https://pastebin.com/raw/ZhqWbV73"))()
+
+-- Anti Cheat remover (removes the anti cheat on some Games)
+loadstring(game:HttpGet("https://pastebin.com/raw/LFBjxBKX"))()
+
+-- Find Who Slapped (Auto dodge perfect hit ...)
+loadstring(game:HttpGet("https://pastebin.com/raw/KgyzGb87"))()
+
+-- The Strongest battlegrounds Movesets
+loadstring(game:HttpGet("https://pastebin.com/raw/Zs1hWRCd"))()
+
+-- Safety NOT Required! Auto farm
+loadstring(game:HttpGet("https://pastebin.com/raw/e2rFWKtr"))()
+
+-- Universal sus animations..
+loadstring(game:HttpGet("https://pastebin.com/raw/pyRnL4d5"))()
+
+-- 🚨BARRY'S PRISON RUN! (OBBY) OP Script
+loadstring(game:HttpGet("https://pastebin.com/raw/JtPG2BUq"))()
+
+-- Natural Disasters Survival anti fall damage (this script is not game id locked)
+loadstring(game:HttpGet("https://pastebin.com/raw/S2xGq9Ud"))()
+
+-- Fly gui
+loadstring(game:HttpGet("https://pastebin.com/raw/iN9ATjz7"))()
+
+-- Sub Place explorer
+loadstring(game:HttpGet("https://pastebin.com/raw/G57gYLJp"))()
+
+-- Makes any gui draggable (top bar only)
+loadstring(game:HttpGet("https://pastebin.com/raw/N8Fjyc6m"))()
+
+-- Molyn invisibility
+loadstring(game:HttpGet("https://pastebin.com/raw/pUSzr9n9"))()
+
+-- Shiftlock
+loadstring(game:HttpGet("https://pastebin.com/raw/UZHKhRxS"))()
+
+-- R15 to R6 fe
+loadstring(game:HttpGet("https://pastebin.com/raw/67ER9Htw"))()
+
+-- HttpGet Monitor (to capture scripts from hubs or things like that)
+loadstring(game:HttpGet("https://pastebin.com/raw/YRx0MjGX"))()
