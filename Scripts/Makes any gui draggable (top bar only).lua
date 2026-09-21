@@ -1,0 +1,90 @@
+--// Professional Window Drag System
+ 
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+ 
+local player = Players.LocalPlayer
+if not player then return end
+ 
+local playerGui = player:WaitForChild("PlayerGui")
+ 
+local processed = setmetatable({}, {__mode = "k"})
+local MIN_SIZE = 140
+local TOPBAR_HEIGHT = 50
+ 
+local function isValidFrame(obj)
+    if not obj:IsA("Frame") then return false end
+    if processed[obj] then return false end
+    if not obj.Parent or not obj.Parent:IsA("ScreenGui") then return false end
+    if not obj.Visible then return false end
+    if obj.AbsoluteSize.X < MIN_SIZE or obj.AbsoluteSize.Y < MIN_SIZE then return false end
+    if not obj:IsDescendantOf(playerGui) then return false end
+    return true
+end
+ 
+local function isInsideTopBar(frame, position)
+    local absPos = frame.AbsolutePosition
+    local relativeY = position.Y - absPos.Y
+    
+    return relativeY >= 0 and relativeY <= TOPBAR_HEIGHT
+end
+ 
+local function makeDraggable(frame)
+    if not isValidFrame(frame) then return end
+    processed[frame] = true
+    
+    local dragging = false
+    local activeInput = nil
+    local startPos
+    local startOffset
+    
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType ~= Enum.UserInputType.Touch
+            and input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+            return
+        end
+        
+        if input.UserInputState ~= Enum.UserInputState.Begin then
+            return
+        end
+        
+        
+        if not isInsideTopBar(frame, input.Position) then
+            return
+        end
+        
+        dragging = true
+        activeInput = input
+        startPos = input.Position
+        startOffset = frame.Position
+    end)
+    
+    frame.InputChanged:Connect(function(input)
+        if not dragging then return end
+        if input ~= activeInput then return end
+        
+        local delta = input.Position - startPos
+        
+        frame.Position = UDim2.new(
+            startOffset.X.Scale,
+            startOffset.X.Offset + delta.X,
+            startOffset.Y.Scale,
+            startOffset.Y.Offset + delta.Y
+        )
+    end)
+    
+    frame.InputEnded:Connect(function(input)
+        if input == activeInput then
+            dragging = false
+            activeInput = nil
+        end
+    end)
+end
+ 
+for _, obj in ipairs(playerGui:GetDescendants()) do
+    makeDraggable(obj)
+end
+ 
+playerGui.DescendantAdded:Connect(function(obj)
+    makeDraggable(obj)
+end)
