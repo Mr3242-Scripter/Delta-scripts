@@ -1,0 +1,50 @@
+-- LocalScript inside StarterPlayerScripts
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Create the part under the player
+local followPart = Instance.new("Part")
+followPart.Size = Vector3.new(4, 1, 4) -- size of the part
+followPart.Anchored = true
+followPart.CanCollide = true
+followPart.Material = Enum.Material.Neon
+followPart.Color = Color3.fromRGB(0, 255, 0)
+followPart.Transparency = 0.5
+followPart.Parent = workspace
+
+-- Function to update part's position under the player
+local function updatePart()
+    if character and humanoidRootPart then
+        followPart.Position = humanoidRootPart.Position - Vector3.new(0, humanoidRootPart.Size.Y/2 + followPart.Size.Y/2, 0)
+    end
+end
+
+-- Toggle collision switch
+local toggle = true
+
+-- Create a GUI button for toggle
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 100, 0, 50)
+toggleButton.Position = UDim2.new(1, -110, 0.5, -25) -- right side
+toggleButton.Text = "Toggle Collision"
+toggleButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+toggleButton.TextColor3 = Color3.new(1,1,1)
+toggleButton.Parent = screenGui
+
+toggleButton.MouseButton1Click:Connect(function()
+    toggle = not toggle
+    followPart.CanCollide = toggle
+    if toggle then
+        followPart.Color = Color3.fromRGB(0,255,0)
+    else
+        followPart.Color = Color3.fromRGB(255,0,0)
+    end
+end)
+
+-- Update loop
+game:GetService("RunService").RenderStepped:Connect(updatePart)
