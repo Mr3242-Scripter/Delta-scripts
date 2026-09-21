@@ -20,8 +20,8 @@ local Window = Rayfield:CreateWindow({
 ---------------------------------------------------
 -- CONFIG
 ---------------------------------------------------
-local PRIMARY_INDEX = "https://pastebin.com/raw/71smW0v8"
-local PROFILE_URL = "https://pastebin.com/u/Mr_3242"
+local PRIMARY_INDEX = "https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Scripts/QuantumX%20Script%20list.lua"
+local PROFILE_URL = nil  -- Now using GitHub Scripts folder via primary index
 
 ---------------------------------------------------
 -- NOTIFY
@@ -41,10 +41,15 @@ end
 -- BLACKLIST
 ---------------------------------------------------
 local blacklist = {
-    "tools","faq","login","sign up","public pastes", "contact", "Quiz bot script (the question about how to custom quiz here’s the answer this isn’t the script)","Fake loading progress", "⚠️this is not a script ⚠️ Daycare 💥 virus combinations", "QuantumX Script list", 
-    "syntax languages","archive","news","pro","dmca",
-    "QuantumX Hub V2.1!","This isn’t a script its a Ui Library i made","How to use loadstring",
-    "rayfield made by sirius"
+    "Quiz bot script (the question about how to custom quiz here’s the answer this isn’t the script)",
+    "Fake loading progress",
+    "⚠️this is not a script ⚠️ Daycare 💥 virus combinations",
+    "QuantumX Script list",
+    "QuantumX Hub V2.1!",
+    "This isn’t a script its a Ui Library i made",
+    "How to use loadstring",
+    "rayfield made by sirius",
+    "Sign in"
 }
 
 local function isBlocked(name)
