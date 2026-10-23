@@ -1,3 +1,4 @@
+
 local success, Rayfield = pcall(function()
     return loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 end)
@@ -21,7 +22,7 @@ local Window = Rayfield:CreateWindow({
 -- CONFIG
 ---------------------------------------------------
 local PRIMARY_INDEX = "https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Scripts/QuantumX%20Script%20list.lua"
-local PROFILE_URL = nil  -- Now using GitHub Scripts folder via primary index
+local PROFILE_URL = "https://api.github.com/repos/Mr3242-Scripter/Delta-scripts/contents/Scripts?ref=main"
 
 ---------------------------------------------------
 -- NOTIFY
@@ -250,17 +251,84 @@ end
 ---------------------------------------------------
 local function parsePrimary(data)
     for line in data:gmatch("[^\r\n]+") do
-        local name, url = line:match("^(.-)%s*=%s*(https://pastebin%.com/raw/%w+)")
-        if name and url then
-            addScript(clean(name), url)
+        -- Split at the first "=" so the URL is preserved.
+        local separator = line:find("=", 1, true)
+
+        if separator then
+            local name = line:sub(1, separator - 1)
+            local url = line:sub(separator + 1)
+
+            name = name:match("^%s*(.-)%s*$")
+            url = url:match("^%s*(.-)%s*$")
+
+            -- Accept GitHub raw URLs as well as legacy Pastebin URLs.
+            local isRawGitHub =
+                url:match("^https://raw%.githubusercontent%.com/")
+                or url:match("^https://github%.com/[^/]+/[^/]+/raw/")
+
+            local isPastebin = url:match("^https://pastebin%.com/raw/%w+")
+
+            if name and name ~= "" and url and (isRawGitHub or isPastebin) then
+                addScript(clean(name), url)
+            end
         end
     end
 end
 
-local function parseProfile(html)
-    for id, name in html:gmatch('href="/(%w+)"[^>]*>([^<]+)</a>') do
-        local url = "https://pastebin.com/raw/" .. id
-        addScript(clean(name), url)
+local function parseProfile(directoryUrl, visited)
+    visited = visited or {}
+
+    if visited[directoryUrl] then
+        return
+    end
+    visited[directoryUrl] = true
+
+    local response = httpGet(directoryUrl, 2)
+    if not response then
+        warn("QuantumX: Failed to fetch GitHub directory: " .. directoryUrl)
+        return
+    end
+
+    local ok, entries = pcall(function()
+        return game:GetService("HttpService"):JSONDecode(response)
+    end)
+
+    if not ok or type(entries) ~= "table" or entries.message then
+        warn("QuantumX: GitHub directory response could not be parsed.")
+        return
+    end
+
+    for _, entry in ipairs(entries) do
+        if type(entry) == "table" then
+            local name = tostring(entry.name or "")
+            local path = tostring(entry.path or "")
+            local entryType = tostring(entry.type or "")
+
+            if entryType == "dir" then
+                -- Recursively scan subfolders inside Scripts.
+                local encodedPath = path:gsub("([^%w%-_%.~/])", function(char)
+                    return string.format("%%%02X", string.byte(char))
+                end)
+
+                local childUrl =
+                    "https://api.github.com/repos/Mr3242-Scripter/Delta-scripts/contents/"
+                    .. encodedPath
+                    .. "?ref=main"
+
+                parseProfile(childUrl, visited)
+
+            elseif entryType == "file" and name:lower():sub(-4) == ".lua" then
+                local scriptName = name:sub(1, -5)
+
+                if not isBlocked(scriptName) and not isBlocked(path) then
+                    local url = entry.download_url
+
+                    if type(url) == "string" and url ~= "" then
+                        addScript(scriptName, url)
+                    end
+                end
+            end
+        end
     end
 end
 
@@ -320,8 +388,8 @@ task.spawn(function()
     local primary = httpGet(PRIMARY_INDEX, 2)
     if primary then parsePrimary(primary) end
 
-    local profile = httpGet(PROFILE_URL, 2)
-    if profile then parseProfile(profile) end
+    -- Fetch every Lua file in the GitHub Scripts folder.
+    parseProfile(PROFILE_URL, {})
 
     buildUI()
 
