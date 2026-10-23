@@ -21,7 +21,7 @@ local Window = Rayfield:CreateWindow({
 -- CONFIG
 ---------------------------------------------------
 local PRIMARY_INDEX = "https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Scripts/QuantumX%20Script%20list.lua"
-local PROFILE_URL = nil  -- Now using GitHub Scripts folder via primary index
+local PROFILE_URL = nil  -- Not used anymore
 
 ---------------------------------------------------
 -- NOTIFY
@@ -250,9 +250,14 @@ end
 ---------------------------------------------------
 local function parsePrimary(data)
     for line in data:gmatch("[^\r\n]+") do
-        local name, url = line:match("^(.-)%s*=%s*(https://pastebin%.com/raw/%w+)")
+        -- Accept both Pastebin and any other https URL (GitHub, etc.)
+        local name, url = line:match("^(.-)%s*=%s*(https?://%S+)")
         if name and url then
-            addScript(clean(name), url)
+            -- Remove trailing junk if any
+            url = url:match("^(https?://[^%s]+)")
+            if url then
+                addScript(clean(name), url)
+            end
         end
     end
 end
@@ -318,16 +323,22 @@ end
 ---------------------------------------------------
 task.spawn(function()
     local primary = httpGet(PRIMARY_INDEX, 2)
-    if primary then parsePrimary(primary) end
+    if primary then
+        parsePrimary(primary)
+    else
+        Notify("Error", "Failed to load script list")
+    end
 
-    local profile = httpGet(PROFILE_URL, 2)
-    if profile then parseProfile(profile) end
+    if PROFILE_URL then
+        local profile = httpGet(PROFILE_URL, 2)
+        if profile then parseProfile(profile) end
+    end
 
     buildUI()
 
     ---------------------------------------------------
     -- STATIC TABS
-   ---------------------------------------------------
+    ---------------------------------------------------
     local CreditsTab = Window:CreateTab("Credits", 4483362458)
 
     CreditsTab:CreateParagraph({
@@ -358,9 +369,9 @@ task.spawn(function()
         Callback = function() copy("https://m.twitch.tv/quantumx_42/home") end
     })
 
----------------------------------------------------
--- UNLOAD
----------------------------------------------------
+    ---------------------------------------------------
+    -- UNLOAD
+    ---------------------------------------------------
     local UnloadTab = Window:CreateTab("Unload", 4483362458)
     UnloadTab:CreateButton({
         Name = "Unload Script",
