@@ -1,0 +1,249 @@
+-- Rayfield
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local OnAttacked = ReplicatedStorage:WaitForChild("Events"):WaitForChild("OnAttacked")
+
+--// CLEAN RE-EXECUTE
+if getgenv().BullyUnload then
+    pcall(getgenv().BullyUnload)
+end
+
+--// FILTER NOTIFICATIONS
+local oldNotify = Rayfield.Notify
+Rayfield.Notify = function(self, data)
+    if data and data.Title then
+        local t = tostring(data.Title)
+        if t:find("Rayfield") or t:find("Interface") then
+            return
+        end
+    end
+    return oldNotify(self, data)
+end
+
+--// NOTIFY
+local function Notify(t, c)
+    Rayfield:Notify({
+        Title = t,
+        Content = c,
+        Duration = 3,
+        Image = 4483362458
+    })
+end
+
+local Window = Rayfield:CreateWindow({
+    Name = "Bad Students",
+    LoadingTitle = "Loading..",
+    LoadingSubtitle = "follow me on TikTok Mr_3242",
+    ConfigurationSaving = {
+        Enabled = false
+    },
+    KeySystem = false
+})
+
+local Tab = Window:CreateTab("Main", 4483362458)
+local CreditsTab = Window:CreateTab("Credits", 4483362458)
+local UnloadTab = Window:CreateTab("Unload", 4483362458)
+
+-- ======================
+-- SETTINGS
+-- ======================
+local AttackWait = 0
+local CoinWait = 0.1
+
+local AutoAttack = false
+local AutoCoin = false
+
+-- ======================
+-- AUTO ATTACK
+-- ======================
+Tab:CreateToggle({
+    Name = "Auto Attack",
+    CurrentValue = false,
+    Callback = function(Value)
+        AutoAttack = Value
+
+        if Value then
+            task.spawn(function()
+                while AutoAttack do
+                    pcall(function()
+                        OnAttacked:FireServer()
+                    end)
+
+                    task.wait(AttackWait)
+                end
+            end)
+        end
+    end
+})
+
+Tab:CreateSlider({
+    Name = "Auto Attack Wait",
+    Range = {0, 1},
+    Increment = 0.1,
+    Suffix = "s",
+    CurrentValue = 0,
+    Callback = function(Value)
+        AttackWait = Value
+    end
+})
+
+-- ======================
+-- AUTO COIN TELEPORT
+-- ======================
+Tab:CreateToggle({
+    Name = "Auto Coin Teleport",
+    CurrentValue = false,
+    Callback = function(Value)
+        AutoCoin = Value
+
+        if Value then
+            task.spawn(function()
+                while AutoCoin do
+                    local character = LocalPlayer.Character
+                    local hrp = character and character:FindFirstChild("HumanoidRootPart")
+                    local coinSpawns = workspace:FindFirstChild("CoinSpawns")
+
+                    if hrp and coinSpawns then
+                        for _, part in ipairs(coinSpawns:GetChildren()) do
+                            if not AutoCoin then
+                                break
+                            end
+
+                            local coin = part:FindFirstChild("Coin")
+
+                            if coin and coin:IsA("MeshPart") then
+                                pcall(function()
+                                    hrp.CFrame = coin.CFrame + Vector3.new(0, 3, 0)
+                                end)
+
+                                task.wait(CoinWait)
+                            end
+                        end
+                    end
+
+                    task.wait(0.1)
+                end
+            end)
+        end
+    end
+})
+
+Tab:CreateSlider({
+    Name = "Coin Teleport Wait",
+    Range = {0, 1},
+    Increment = 0.1,
+    Suffix = "s",
+    CurrentValue = 0.1,
+    Callback = function(Value)
+        CoinWait = Value
+    end
+})
+
+-- ======================
+-- TELEPORT TO SCHOOL
+-- ======================
+Tab:CreateButton({
+    Name = "Teleport to School",
+    Callback = function()
+        local character = LocalPlayer.Character
+        local hrp = character and character:FindFirstChild("HumanoidRootPart")
+
+        if hrp then
+            hrp.CFrame = CFrame.new(215, 48, 23)
+        end
+    end
+})
+
+-- ======================
+-- COIN COUNT
+-- ======================
+local CoinCountParagraph = Tab:CreateParagraph({
+    Title = "Coins Available",
+    Content = "Checking..."
+})
+
+local function GetCoinCount()
+    local count = 0
+    local coinSpawns = workspace:FindFirstChild("CoinSpawns")
+
+    if coinSpawns then
+        for _, part in ipairs(coinSpawns:GetChildren()) do
+            local coin = part:FindFirstChild("Coin")
+
+            if coin and coin:IsA("MeshPart") then
+                count += 1
+            end
+        end
+    end
+
+    return count
+end
+
+-- Update coin count
+task.spawn(function()
+    while task.wait(0.5) do
+        pcall(function()
+            CoinCountParagraph:Set({
+                Title = "Coins Available",
+                Content = tostring(GetCoinCount()) .. " coin(s) available to collect"
+            })
+        end)
+    end
+end)
+
+-- ======================
+-- CREDITS
+-- ======================
+CreditsTab:CreateParagraph({
+    Title = "Credits",
+    Content = "Script created by Mr_3242\nThanks for using the script!"
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy TikTok Link",
+    Callback = function()
+        setclipboard("https://www.tiktok.com/@Mr_3242")
+        Notify("Copied", "TikTok link copied")
+    end
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy YouTube Link",
+    Callback = function()
+        setclipboard("https://www.youtube.com/@Mr_3242.")
+        Notify("Copied", "YouTube link copied")
+    end
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy Twitch Link",
+    Callback = function()
+        setclipboard("https://m.twitch.tv/quantumx_42/home")
+        Notify("Copied", "Twitch link copied")
+    end
+})
+
+-- ======================
+-- UNLOAD
+-- ======================
+getgenv().BullyUnload = function()
+    AutoAttack = false
+    AutoCoin = false
+
+    pcall(function()
+        Rayfield:Destroy()
+    end)
+
+    getgenv().BullyUnload = nil
+end
+
+UnloadTab:CreateButton({
+    Name = "Unload Script",
+    Callback = function()
+        getgenv().BullyUnload()
+    end
+})
