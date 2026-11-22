@@ -274,19 +274,42 @@ end
 -- STORAGE
 ---------------------------------------------------
 local seen = {}
+local seenNames = {}
 
 local function normalizeUrl(url)
     url = tostring(url or ""):match("^%s*(.-)%s*$") or ""
     return (url:gsub("/refs/heads/([^/]+)/", "/%1/"))
 end
 
+local function normalizeScriptName(name)
+    name = clean(name):lower()
+
+    -- Category labels are metadata, not part of a script's identity.
+    while true do
+        local stripped = name:gsub("^%s*%[[^%]]+%]%s*", "", 1)
+        if stripped == name then
+            stripped = name:gsub("^%s*%([^%)]+%)%s*", "", 1)
+        end
+        if stripped == name then break end
+        name = stripped
+    end
+
+    -- Ignore capitalization, spacing, and decorative punctuation.
+    return (name:gsub("[%p%c%s]+", ""))
+end
+
 local function addScript(name, url)
     if isBlocked(name) then return end
 
     url = normalizeUrl(url)
-    if url == "" or seen[url] then return end
+    local nameKey = normalizeScriptName(name)
+
+    if url == "" or nameKey == "" or seen[url] or seenNames[nameKey] then
+        return
+    end
 
     seen[url] = true
+    seenNames[nameKey] = true
 
     local cat = getCategory(name)
     table.insert(categories[cat], {
