@@ -39,4 +39,4 @@ If you suggest a change, include the affected file, what it fixes, and any relev
 
 - **TikTok:** [Mr_3242](https://www.tiktok.com/@mr_3242)
 - **Twitch:** [quantumx_42](https://www.twitch.tv/quantumx_42)
-- **YouTube:** [Mr_3242](https://www.youtube.com/@Mr_3242)
+- **YouTube:** [Mr_3242](https://www.youtube.com/@Mr_3242.)
