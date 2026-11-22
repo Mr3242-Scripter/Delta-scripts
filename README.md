@@ -9,14 +9,14 @@ This repository keeps the scripts in one place, makes individual files easier to
 | Location | Description |
 | --- | --- |
 | [Scripts/](Scripts) | The script collection. |
-| [Script index](Scripts/QuantumX%20Script%20list) | Browse the available scripts and their source links. |
+| [QuantumX Hub](Scripts/QuantumX%20Hub%20V2.1!) | Open the QuantumX Hub source file. |
 | [Raw source guide](Scripts/How%20to%20use%20loadstring) | Learn how raw source URLs work and how to inspect a script before trusting it. |
 
 > **Note:** Script filenames in this repository do not use a .lua extension. Open the linked file to view its source.
 
 ## Getting started
 
-1. Browse the [script index](Scripts/QuantumX%20Script%20list) or open the Scripts folder.
+1. Open the [QuantumX Hub](Scripts/QuantumX%20Hub%20V2.1!) source file or browse the Scripts folder.
 2. Select the script you want to understand.
 3. Read the complete source before deciding whether to use it.
 4. Check what the code does, what environment it expects, and whether it makes network requests or changes game state.
