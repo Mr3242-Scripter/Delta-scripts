@@ -1,0 +1,202 @@
+--// LOAD RAYFIELD
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+
+--// FILTER NOTIFICATIONS
+local oldNotify = Rayfield.Notify
+Rayfield.Notify = function(self, data)
+    if data and data.Title then
+        local t = tostring(data.Title)
+        if t:find("Rayfield") or t:find("Interface") then return end
+    end
+    return oldNotify(self, data)
+end
+
+--// NOTIFY FUNCTION
+local function Notify(t,c)
+    Rayfield:Notify({
+        Title=t,
+        Content=c,
+        Duration=3,
+        Image=4483362458
+    })
+end
+
+--// WINDOW
+local Window = Rayfield:CreateWindow({
+    Name = "auto farm money",
+    LoadingTitle = "MONEY",
+    LoadingSubtitle = "follow me on TikTok Mr_3242"
+})
+
+--// TABS
+local Tab = Window:CreateTab("Main", 4483362458)
+local CreditsTab = Window:CreateTab("Credits", 4483362458)
+local UnloadTab = Window:CreateTab("Unload", 4483362458)
+
+--// SERVICES
+local Players          = game:GetService("Players")
+local RunService       = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local player    = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+--// VALUES
+local TARGET_POS  = Vector3.new(-85, 31, -21)
+local MAX_GRAVITY = 150
+local DEF_GRAVITY = 196.2
+local ACTIVE_JUMP = 0.1
+local DEF_JUMP    = 50
+local MAX_DIST    = 8
+
+local isActive    = false
+local spamActive  = false
+local jumpKeyConn = nil
+local posConn     = nil
+
+--// HELPERS
+local function getCharParts()
+    character = player.Character
+    if not character then return nil, nil end
+    return character:FindFirstChild("HumanoidRootPart"),
+           character:FindFirstChildOfClass("Humanoid")
+end
+
+--// LOOP
+local function iniciarSpamLoop()
+    spamActive = true
+    task.spawn(function()
+        while spamActive do
+            local hrp, hum = getCharParts()
+            if hrp and hum then
+                workspace.Gravity = MAX_GRAVITY
+                hum.UseJumpPower  = true
+                hum.JumpPower     = ACTIVE_JUMP
+                hrp.CFrame        = CFrame.new(TARGET_POS + Vector3.new(0, 3, 0))
+                hum.Jump          = true
+                task.wait()
+
+                if not spamActive then break end
+
+                workspace.Gravity = DEF_GRAVITY
+                hum.JumpPower     = DEF_JUMP
+                hum.Jump          = false
+                task.wait()
+            else
+                task.wait()
+            end
+        end
+    end)
+end
+
+local function detenerSpamLoop()
+    spamActive = false
+end
+
+--// ENABLE
+local function activar()
+    isActive = true
+
+    if posConn then posConn:Disconnect() end
+    posConn = RunService.Heartbeat:Connect(function()
+        if not isActive then return end
+        local hrp, _ = getCharParts()
+        if hrp and (hrp.Position - TARGET_POS).Magnitude > MAX_DIST then
+            hrp.CFrame = CFrame.new(TARGET_POS + Vector3.new(0, 3, 0))
+        end
+    end)
+
+    if jumpKeyConn then jumpKeyConn:Disconnect() end
+    jumpKeyConn = UserInputService.InputBegan:Connect(function(input, gp)
+        if gp then return end
+        if input.KeyCode == Enum.KeyCode.Space then
+            local _, hum = getCharParts()
+            if hum then hum.Jump = true end
+        end
+    end)
+
+    iniciarSpamLoop()
+end
+
+--// DISABLE
+local function desactivar()
+    isActive = false
+
+    detenerSpamLoop()
+
+    if posConn then posConn:Disconnect() posConn = nil end
+    if jumpKeyConn then jumpKeyConn:Disconnect() jumpKeyConn = nil end
+
+    workspace.Gravity = DEF_GRAVITY
+    local _, hum = getCharParts()
+    if hum then
+        hum.JumpPower = DEF_JUMP
+        hum.Jump      = false
+    end
+end
+
+--// TOGGLE
+Tab:CreateToggle({
+    Name = "farm money (really good)",
+    CurrentValue = false,
+    Callback = function(Value)
+        if Value then activar() else desactivar() end
+    end,
+})
+
+--// =========================
+--// 🎖️ CREDITS TAB
+--// =========================
+
+CreditsTab:CreateParagraph({
+    Title = "Credits",
+    Content = "Script created by Mr_3242\nThanks for using the script!"
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy TikTok",
+    Callback = function()
+        setclipboard("https://www.tiktok.com/@Mr_3242")
+        Notify("Copied","TikTok link copied")
+    end
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy YouTube",
+    Callback = function()
+        setclipboard("https://www.youtube.com/@Mr_3242.")
+        Notify("Copied","YouTube link copied")
+    end
+})
+
+CreditsTab:CreateButton({
+    Name = "Copy Twitch",
+    Callback = function()
+        setclipboard("https://m.twitch.tv/quantumx_42/home")
+        Notify("Copied","Twitch link copied")
+    end
+})
+
+--// =========================
+--// 🧹 UNLOAD SYSTEM
+--// =========================
+
+getgenv().AutoFarmUnload = function()
+    desactivar()
+
+    if posConn then posConn:Disconnect() end
+    if jumpKeyConn then jumpKeyConn:Disconnect() end
+
+    pcall(function()
+        Rayfield:Destroy()
+    end)
+
+    getgenv().AutoFarmUnload = nil
+end
+
+UnloadTab:CreateButton({
+    Name = "Unload Script",
+    Callback = function()
+        getgenv().AutoFarmUnload()
+    end
+})
