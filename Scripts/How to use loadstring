@@ -18,13 +18,9 @@ A raw URL returns the file's contents as plain text. This is useful when you wan
 4. Copy the address from the browser.
 5. Open the copied address in a new tab and confirm that it shows the expected source text.
 
-A common Pastebin raw URL has this format:
+A common Pastebin raw URL has this format: `https://pastebin.com/raw/PASTE_ID`
 
-```text
-https://pastebin.com/raw/PASTE_ID
-```
-
-Replace PASTE_ID with the identifier from the paste's URL. The raw endpoint returns the stored text rather than the normal viewing page. Some pastes may be private, protected, expired, or unavailable as raw text.
+Replace `PASTE_ID` with the identifier from the paste's URL. The raw endpoint returns the stored text rather than the normal viewing page. Some pastes may be private, protected, expired, or unavailable as raw text.
 
 ## 3. Finding a raw GitHub file URL
 
@@ -34,21 +30,13 @@ Replace PASTE_ID with the identifier from the paste's URL. The raw endpoint retu
 4. Confirm that the browser displays the file's plain text.
 5. Copy the URL only after checking that it points to the correct repository, branch, and file.
 
-A GitHub raw URL generally follows this structure:
+A GitHub raw URL generally follows this structure: `https://raw.githubusercontent.com/OWNER/REPOSITORY/BRANCH/PATH`
 
-```text
-https://raw.githubusercontent.com/OWNER/REPOSITORY/BRANCH/PATH
-```
+For this repository, script filenames are extensionless. Keep the exact filename and path shown on GitHub; do not add `.lua` if the file does not have that suffix.
 
-For this repository, script filenames are extensionless. Keep the exact filename and path shown on GitHub; do not add .lua if the file does not have that suffix.
+Example structure for a file in this repository: `https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Scripts/FILE_NAME`
 
-Example structure for a file in this repository:
-
-```text
-https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Scripts/FILE_NAME
-```
-
-Replace FILE_NAME with the exact filename. If the filename contains spaces, the URL must encode those spaces as %20.
+Replace `FILE_NAME` with the exact filename. If the filename contains spaces, the URL must encode those spaces as `%20`.
 
 ## 4. How to check that a link is correct
 
