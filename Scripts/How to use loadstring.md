@@ -64,7 +64,7 @@ Do not assume a script is safe just because it is hosted on GitHub or Pastebin. 
 
 ## 6. How to execute the script once you have the raw link (Very Easy Steps)
 
-Once you have a working raw URL, follow these simple steps to run the script with **Delta Executor** (or most other Roblox executors):
+Once you have a working raw URL, follow these simple steps to run the script with **your executor** (Delta is recommended):
 
 ### Step 1 – Create the loadstring
 Copy this exact format and replace the URL:
@@ -83,14 +83,19 @@ Make sure you keep the final `()` at the end. Do not remove it.
 ### Step 2 – Copy the full loadstring
 Select the entire line (from `loadstring` all the way to the last `()`) and copy it.
 
-### Step 3 – Open Roblox and join the correct game
-- Launch Roblox
-- Join the game that the script is made for
+### Step 3 – Open your executor and join the correct game
+- Open the executor you are using (for example Delta)
+- Join the Roblox game that the script is made for
 
-### Step 4 – Open Delta and paste the script
-1. Open Delta Executor
+**Don’t have an executor yet?**  
+You can easily download the official **Delta Executor** from these official links only:
+- https://deltaexploits.gg
+- https://deltaexploits.dev
+
+### Step 4 – Paste the script into your executor
+1. Open your executor
 2. Paste the loadstring into the script editor (or use the "Add Script" / "Execute Clipboard" button if your version has it)
-3. Attach / Inject if Delta asks you to
+3. Attach / Inject if your executor asks you to
 
 ### Step 5 – Execute
 Press the **Execute** button.
@@ -104,7 +109,7 @@ If everything is correct, the script should start running and its GUI (if it has
 - Some scripts need to be executed again after you rejoin the game.
 - Make sure you are in the right game before executing.
 
-That’s it! Once you have the raw link, just wrap it in the loadstring and execute it in Delta.
+That’s it! Once you have the raw link, just wrap it in the loadstring and execute it in your executor.
 
 ## 7. Common problems
 
