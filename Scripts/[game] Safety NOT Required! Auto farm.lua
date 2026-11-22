@@ -56,7 +56,7 @@ WarningGui:Destroy()
 ------------------------------------------------
 
 local UI = loadstring(game:HttpGet(
-	"https://pastebin.com/raw/4NHU7v35",
+	"https://github.com/Mr3242-Scripter/Delta-scripts/blob/main/Scripts/This%20isn’t%20a%20script%20its%20a%20Ui%20Library%20i%20made.lua",
 	true
 ))()
 
