@@ -125,6 +125,11 @@ end
 ---------------------------------------------------
 local function getCategory(name)
     local n = clean(name):lower()
+    
+    -- Explicit game labels override automation and other keyword matches.
+    if n:match("^%[game%]") or n:match("^%(game%)") or n:match("^game[%s:_%-]") then
+        return "Games"
+    end
 
     if n:find("admin", 1, true)
         or n:find("nameless", 1, true)
@@ -233,9 +238,16 @@ end
 ---------------------------------------------------
 local seen = {}
 
+local function normalizeUrl(url)
+    url = tostring(url or ""):match("^%s*(.-)%s*$") or ""
+    return (url:gsub("/refs/heads/([^/]+)/", "/%1/"))
+end
+
 local function addScript(name, url)
     if isBlocked(name) then return end
-    if seen[url] then return end
+
+    url = normalizeUrl(url)
+    if url == "" or seen[url] then return end
 
     seen[url] = true
 
