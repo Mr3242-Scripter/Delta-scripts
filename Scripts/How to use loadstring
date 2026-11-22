@@ -1,35 +1,164 @@
-How to use loadstring with Pastebin (quick guide)
+# How to Use loadstring in Roblox Studio
 
-This is the easiest way to run scripts without pasting the whole thing every time.
+This guide explains what loadstring does, how it works in a Roblox experience you own or are authorized to edit, and how to troubleshoot common problems.
 
-Go to any paste on pastebin  
-Example: my Timebomb anklebreak script or anything else
+> **Important:** This is the Roblox Studio server-side workflow. Roblox's built-in loadstring is not a normal LocalScript feature and this guide does not cover third-party executors or running code in games you do not control.
 
-Open it and click the RAW button at the top  
-Now you should see only the script as plain text
+## 1. What does loadstring do?
 
-Copy the URL from your browser  
-It should look like this:
-https://pastebin.com/raw/
-
-If it doesn’t have /raw/ in it, it won’t work
-
-Now take that link and put it into this:
-
-loadstring(game:HttpGet("PASTE_LINK_HERE"))()
-
-Replace PASTE_LINK_HERE with your raw pastebin link
-
-Paste it into your executor and run it
-
-That’s literally it, the script will load from pastebin
-
-Quick tips:
-- Always use the raw link
-- If it doesn’t work, check the link again
-- Make sure the script actually works
-- Don’t run random stuff you don’t trust
+loadstring takes a string containing Luau source code and attempts to compile it into a function.
 
 Example:
 
-loadstring(game:HttpGet("https://pastebin.com/raw/yBGyr4s9"))()
+```lua
+local source = 'print("Hello from loaded code!")'
+
+local loadedFunction, compileError = loadstring(source)
+
+if not loadedFunction then
+    warn("The code could not be compiled:", compileError)
+    return
+end
+
+loadedFunction()
+```
+
+There are two separate stages:
+
+1. **Compile:** loadstring(source) checks the text and returns a function if the source is valid.
+2. **Run:** Calling the returned function executes the compiled code.
+
+A successful compile does not guarantee that the code will run without errors.
+
+## 2. Roblox requirements
+
+Roblox places restrictions on this feature:
+
+- loadstring is disabled by default.
+- It is available only to server-side Scripts when the experience allows it.
+- It is not available in LocalScripts.
+- Roblox recommends keeping it disabled unless you have a clear, controlled reason to use it. Executing untrusted source can create serious security problems.
+
+For official details, see [ServerScriptService — LoadStringEnabled](https://create.roblox.com/docs/reference/engine/classes/ServerScriptService/LoadStringEnabled).
+
+## 3. Where the code belongs
+
+For a Studio project you control:
+
+1. Open the experience in Roblox Studio.
+2. Open **Explorer**.
+3. Find **ServerScriptService**.
+4. Insert a normal **Script** under ServerScriptService.
+5. Put your server-side code in that Script.
+
+Do not put this workflow in a LocalScript. The built-in feature is server-side.
+
+If you decide to enable the feature for a controlled test, review the LoadStringEnabled setting on ServerScriptService and understand the security implications first. Do not enable it in a live experience just to make an unfamiliar script work.
+
+## 4. Loading source from a URL
+
+A URL must return the actual source code as plain text. A normal webpage containing buttons, formatting, or a preview is not the same thing as a raw source response.
+
+For example, a source-hosting service may provide a **Raw** view. Copy the raw HTTPS URL, not the page URL. Use a URL you control and can verify.
+
+To make an HTTP request from a Roblox server Script, the experience must allow HTTP requests. In Studio, this setting is under **File → Experience Settings → Security → Allow HTTP Requests**. See [Roblox's HTTP service guide](https://create.roblox.com/docs/cloud-services/http-service).
+
+The following example shows the structure. Replace the example URL with a raw HTTPS URL that you own and have reviewed:
+
+```lua
+local HttpService = game:GetService("HttpService")
+
+local SOURCE_URL = "https://example.com/my-reviewed-script.txt"
+
+local requestSucceeded, sourceOrError = pcall(function()
+    return HttpService:GetAsync(SOURCE_URL)
+end)
+
+if not requestSucceeded then
+    warn("Could not download the source:", sourceOrError)
+    return
+end
+
+local loadedFunction, compileError = loadstring(sourceOrError)
+
+if not loadedFunction then
+    warn("The downloaded source contains a compile error:", compileError)
+    return
+end
+
+local runSucceeded, runtimeError = pcall(loadedFunction)
+
+if not runSucceeded then
+    warn("The loaded code stopped with an error:", runtimeError)
+end
+```
+
+### What each part does
+
+| Part | Purpose |
+| --- | --- |
+| HttpService | Roblox service used to make HTTP requests. |
+| GetAsync() | Downloads the response body from the URL. |
+| pcall() | Catches an error so the Script can report it instead of stopping unexpectedly. |
+| loadstring() | Compiles the downloaded text into a function. |
+| loadedFunction() | Runs the function after compilation succeeds. |
+
+## 5. Security checklist
+
+Remote code can change after you have tested it. A URL that was safe yesterday might serve different code tomorrow.
+
+Before loading remote source:
+
+- Read the complete source and understand what it does.
+- Use a repository or hosting account that you control.
+- Review changes whenever the source is updated.
+- Do not load obfuscated code or code you cannot explain.
+- Do not give downloaded code access to secrets, private data, or important game systems.
+- Test in a separate development experience before considering any production use.
+- Prefer a **ModuleScript** when you control the code. It is easier to review, version, and maintain than downloading and executing arbitrary text.
+
+Never treat a raw URL as proof that its contents are safe.
+
+## 6. Common problems
+
+### loadstring is nil or unavailable
+
+- Confirm that you are using a normal server-side Script.
+- Confirm that you understand and have configured the ServerScriptService LoadStringEnabled setting for your own test experience.
+- Remember that LocalScripts cannot use Roblox's built-in loadstring.
+
+### HTTP requests are blocked
+
+- Check **File → Experience Settings → Security → Allow HTTP Requests**.
+- Confirm that the URL uses HTTPS and is reachable.
+- Check the Output window for the request error.
+
+### The URL opens a webpage instead of source code
+
+- Open the hosting service's raw/plain-text view.
+- Copy the raw URL.
+- Confirm that the response contains Luau source, not HTML.
+
+### Compilation fails
+
+- Read the compile error printed by warn().
+- Check for incomplete source, invalid Luau syntax, or code intended for a different environment.
+
+### The code compiles but fails when it runs
+
+- Compilation only checks whether the text can be turned into a function.
+- The function may still reference missing services, objects, variables, or APIs.
+- Read the runtime error in the Output window and check the script's requirements.
+
+## 7. A safer alternative: ModuleScripts
+
+If the code is part of your own Roblox experience, a ModuleScript is usually the better choice.
+
+Create a ModuleScript in a suitable location, put reusable functions in it, and load it with require() from another Script. This avoids downloading and executing changing source text at runtime.
+
+## Official Roblox documentation
+
+- [ServerScriptService — LoadStringEnabled](https://create.roblox.com/docs/reference/engine/classes/ServerScriptService/LoadStringEnabled)
+- [HttpService](https://create.roblox.com/docs/reference/engine/classes/HttpService)
+- [In-game HTTP requests](https://create.roblox.com/docs/cloud-services/http-service)
+- [Luau globals — loadstring](https://create.roblox.com/docs/reference/engine/globals/LuaGlobals/loadstring)
