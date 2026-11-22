@@ -62,7 +62,51 @@ Read the entire file and look for:
 
 Do not assume a script is safe just because it is hosted on GitHub or Pastebin. Anyone with permission to edit a hosted file may be able to change what its raw URL returns later.
 
-## 6. Common problems
+## 6. How to execute the script once you have the raw link (Very Easy Steps)
+
+Once you have a working raw URL, follow these simple steps to run the script with **Delta Executor** (or most other Roblox executors):
+
+### Step 1 – Create the loadstring
+Copy this exact format and replace the URL:
+
+```lua
+loadstring(game:HttpGet("YOUR_RAW_URL_HERE"))()
+```
+
+**Real example** (using a file from this repository):
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Scripts/Your%20Script%20Name"))()
+```
+
+Make sure you keep the final `()` at the end. Do not remove it.
+
+### Step 2 – Copy the full loadstring
+Select the entire line (from `loadstring` all the way to the last `()`) and copy it.
+
+### Step 3 – Open Roblox and join the correct game
+- Launch Roblox
+- Join the game that the script is made for
+
+### Step 4 – Open Delta and paste the script
+1. Open Delta Executor
+2. Paste the loadstring into the script editor (or use the "Add Script" / "Execute Clipboard" button if your version has it)
+3. Attach / Inject if Delta asks you to
+
+### Step 5 – Execute
+Press the **Execute** button.
+
+If everything is correct, the script should start running and its GUI (if it has one) should appear.
+
+### Quick Tips
+- Always open the raw URL in your browser first and quickly check the code.
+- If you get a 404 error, the file was moved, renamed, or the URL is wrong.
+- Keep spaces encoded as `%20`.
+- Some scripts need to be executed again after you rejoin the game.
+- Make sure you are in the right game before executing.
+
+That’s it! Once you have the raw link, just wrap it in the loadstring and execute it in Delta.
+
+## 7. Common problems
 
 ### The raw link shows a webpage
 
@@ -80,7 +124,7 @@ The file may have been updated. Compare it with the version you previously revie
 
 It may have expired, been deleted, or have access restrictions that prevent raw viewing.
 
-## 7. Useful links
+## 8. Useful links
 
 - [Delta Scripts repository](https://github.com/Mr3242-Scripter/Delta-scripts)
 - [Scripts folder](https://github.com/Mr3242-Scripter/Delta-scripts/tree/main/Scripts)
