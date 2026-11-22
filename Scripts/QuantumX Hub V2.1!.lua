@@ -123,13 +123,50 @@ end
 ---------------------------------------------------
 -- CATEGORY DETECTION
 ---------------------------------------------------
+local explicitCategoryTags = {
+    game = "Games", games = "Games",
+    fly = "Movement", movement = "Movement",
+    automation = "Automation", auto = "Automation",
+    admin = "Admin", hub = "Hub",
+    visual = "Visuals", visuals = "Visuals",
+    tool = "Tools", tools = "Tools",
+    misc = "Misc",
+    bypass = "Bypasses", bypasses = "Bypasses"
+}
+
+local function getLeadingTagCategory(name)
+    local remaining = clean(name):lower()
+
+    while remaining ~= "" do
+        local tag, rest = remaining:match("^%s*%[([^%]]+)%]%s*(.*)$")
+
+        if not tag then
+            tag, rest = remaining:match("^%s*%(([^%)]+)%)%s*(.*)$")
+        end
+
+        if not tag then
+            -- Also accept unbracketed labels such as "Fly Auto Farm".
+            tag, rest = remaining:match("^%s*([%a][%w%-]*)%s*[:%-]?%s+(.+)$")
+        end
+
+        if not tag then break end
+
+        local category = explicitCategoryTags[clean(tag):lower()]
+        if category then return category end
+
+        -- Skip unknown leading labels and check the next tag.
+        remaining = clean(rest or "")
+    end
+
+    return nil
+end
+
 local function getCategory(name)
     local n = clean(name):lower()
-    
-    -- Explicit game labels override automation and other keyword matches.
-    if n:match("^%[game%]") or n:match("^%(game%)") or n:match("^game[%s:_%-]") then
-        return "Games"
-    end
+
+    -- A recognized category tag at the beginning always overrides keywords.
+    local taggedCategory = getLeadingTagCategory(name)
+    if taggedCategory then return taggedCategory end
 
     if n:find("admin", 1, true)
         or n:find("nameless", 1, true)
