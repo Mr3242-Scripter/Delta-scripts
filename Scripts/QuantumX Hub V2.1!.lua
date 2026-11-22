@@ -435,10 +435,16 @@ end
 ---------------------------------------------------
 task.spawn(function()
     local primary = httpGet(PRIMARY_INDEX, 2)
-    if primary then parsePrimary(primary) end
 
-    -- Fetch every Lua file in the GitHub Scripts folder.
-    parseProfile(PROFILE_URL, {})
+    if primary then
+        -- The primary index is the authoritative script source.
+        -- Do not also scan the GitHub directory: that imports the same files twice.
+        parsePrimary(primary)
+    else
+        -- Use the directory scan only as a fallback if the index is unavailable.
+        warn("QuantumX: Primary script index unavailable; using GitHub directory fallback.")
+        parseProfile(PROFILE_URL, {})
+    end
 
     buildUI()
 
