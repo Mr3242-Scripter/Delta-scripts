@@ -10,7 +10,7 @@ This repository keeps the scripts in one place, makes individual files easier to
 | --- | --- |
 | [Scripts/](Scripts) | The script collection. |
 | [QuantumX Hub](Scripts/QuantumX%20Hub%20V2.1!) | Open the QuantumX Hub source file. |
-| [Raw source guide](Scripts/How%20to%20use%20loadstring) | Learn how raw source URLs work and how to inspect a script before trusting it. |
+| [Raw source guide](Scripts/How%20to%20use%20loadstring.md) | Learn how raw source URLs work and how to inspect a script before trusting it. |
 
 > **Note:** Script filenames in this repository do not use a .lua extension. Open the linked file to view its source.
 
