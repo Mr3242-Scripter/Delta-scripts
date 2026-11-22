@@ -21,7 +21,7 @@ local Window = Rayfield:CreateWindow({
 ---------------------------------------------------
 -- CONFIG
 ---------------------------------------------------
-local PRIMARY_INDEX = "https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Scripts/QuantumX%20Script%20list.lua"
+local PRIMARY_INDEX = "https://raw.githubusercontent.com/Mr3242-Scripter/Delta-scripts/main/Scripts/QuantumX%20Script%20list"
 local PROFILE_URL = "https://api.github.com/repos/Mr3242-Scripter/Delta-scripts/contents/Scripts?ref=main"
 
 ---------------------------------------------------
